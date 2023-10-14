@@ -18,7 +18,8 @@ sealed interface DisplayItem {
     private data class JsonSchema(
         val type: String,
         val text: String? = null,
-        val url: String? = null,
+        val action: Action? = null,
+        val latching: Boolean? = null,
         val indicator: Indicator? = null,
     )
 
@@ -36,18 +37,28 @@ sealed interface DisplayItem {
                 "h2" -> H2(schema.text!!)
                 "h3" -> H3(schema.text!!)
                 "body" -> Body(schema.text!!)
-                "button" -> Button(schema.text!!, schema.url!!, schema.indicator ?: Indicator.Nominal)
+                "button" -> Button(
+                    text = schema.text!!,
+                    action = schema.action!!,
+                    latching = schema.latching ?: false,
+                    indicatorColor = schema.indicator ?: Indicator.Nominal
+                )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
 
         override fun serialize(encoder: Encoder, value: DisplayItem) {
             val schema = when (value) {
-                is H1 -> JsonSchema("h1", value.text)
-                is H2 -> JsonSchema("h2", value.text)
-                is H3 -> JsonSchema("h3", value.text)
-                is Body -> JsonSchema("body", value.text)
-                is Button -> JsonSchema("button", value.text, value.url)
+                is H1 -> JsonSchema(type = "h1", text = value.text)
+                is H2 -> JsonSchema(type = "h2", text = value.text)
+                is H3 -> JsonSchema(type = "h3", text = value.text)
+                is Body -> JsonSchema(type = "body", text = value.text)
+                is Button -> JsonSchema(
+                    type = "button",
+                    text = value.text,
+                    action = value.action,
+                    latching = value.latching,
+                )
             }
             delegate.serialize(encoder, schema)
         }

@@ -35,7 +35,12 @@ fun DisplayScreen(
         }
         config.items.forEach { item ->
             when (item) {
-                is Button -> Button(text = item.text, onClick = { onButtonClick(item) }, indicator = item.indicatorColor)
+                is Button -> Button(
+                    text = item.text,
+                    onClick = { onButtonClick(item) },
+                    indicator = item.indicatorColor,
+                    latching = item.latching,
+                )
                 is H1 -> BasicText(text = item.text, style = InkTheme.typography.h1)
                 is H2 -> BasicText(text = item.text, style = InkTheme.typography.h2)
                 is H3 -> BasicText(text = item.text, style = InkTheme.typography.h3)

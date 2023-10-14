@@ -42,7 +42,12 @@ class DisplayServer {
             }
             routing {
                 put("/update") {
-                    val config = call.receive<DisplayConfig>()
+                    val config = try {
+                        call.receive<DisplayConfig>()
+                    } catch (e: Exception) {
+                        android.util.Log.e("Server", "Error Receiving Request", e)
+                        throw e
+                    }
                     currentConfig.value = config
                     call.respond(HttpStatusCode.NoContent)
                 }

@@ -1,6 +1,7 @@
 package com.inkapplications.glassconsole
 
 import com.inkapplications.DisplayApplication
+import com.inkapplications.glassconsole.client.ActionClient
 import com.inkapplications.glassconsole.server.DisplayServer
 import com.inkapplications.glassconsole.server.IpProvider
 import io.ktor.client.HttpClient
@@ -14,6 +15,8 @@ object ApplicationModule {
 
     val displayServer = DisplayServer()
     val httpClient = HttpClient(CIO) {}
+    val actionClient = ActionClient(httpClient)
+
     val ipProvider by lazy {
         IpProvider(
             connectivityManager = application.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager,
