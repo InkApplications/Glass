@@ -19,6 +19,27 @@ sealed interface DisplayItem {
     ): DisplayItem
 
     /**
+     * Medium header text
+     */
+    data class H2(
+        val text: String,
+    ): DisplayItem
+
+    /**
+     * Small header text
+     */
+    data class H3(
+        val text: String,
+    ): DisplayItem
+
+    /**
+     * Normal body text.
+     */
+    data class Body(
+        val text: String,
+    ): DisplayItem
+
+    /**
      * A button that can be pressed to invoke a particular action.
      */
     data class Button(
@@ -47,6 +68,9 @@ sealed interface DisplayItem {
             val schema = delegate.deserialize(decoder)
             return when (schema.type) {
                 "h1" -> H1(schema.text!!)
+                "h2" -> H2(schema.text!!)
+                "h3" -> H3(schema.text!!)
+                "body" -> Body(schema.text!!)
                 "button" -> Button(schema.text!!, schema.url!!)
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
@@ -55,6 +79,9 @@ sealed interface DisplayItem {
         override fun serialize(encoder: Encoder, value: DisplayItem) {
             val schema = when (value) {
                 is H1 -> JsonSchema("h1", value.text)
+                is H2 -> JsonSchema("h2", value.text)
+                is H3 -> JsonSchema("h3", value.text)
+                is Body -> JsonSchema("body", value.text)
                 is Button -> JsonSchema("button", value.text, value.url)
             }
             delegate.serialize(encoder, schema)

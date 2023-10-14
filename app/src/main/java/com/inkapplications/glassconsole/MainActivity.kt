@@ -12,6 +12,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
+import com.inkapplications.glassconsole.structures.DisplayItem
+import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -39,10 +41,16 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.displayCutoutPadding()
             ) {
                 when (screenState) {
-                    is ScreenState.Configured -> DisplayScreen(screenState.config)
+                    is ScreenState.Configured -> DisplayScreen(screenState.config, ::onButtonClick)
                     ScreenState.NoData -> EmptyScreen()
                 }
             }
+        }
+    }
+
+    private fun onButtonClick(item: DisplayItem.Button) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            ApplicationModule.httpClient.get(item.url)
         }
     }
 }
