@@ -43,4 +43,8 @@ name = "ui-tooling"
 [libraries.compose-foundation]
 module = "androidx.compose.foundation:foundation"
 
+[libraries.androidx-appcompat]
+version = "1.6.1"
+module = "androidx.appcompat:appcompat"
+
 [bundles]
