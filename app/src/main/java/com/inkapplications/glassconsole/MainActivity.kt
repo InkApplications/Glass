@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -13,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import com.inkapplications.glassconsole.structures.Button
+import com.inkapplications.glassconsole.ui.theme.InkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -37,7 +40,9 @@ class MainActivity : ComponentActivity() {
             val screenState = viewModel.state.collectAsState().value
 
             Box(
-                modifier = Modifier.displayCutoutPadding()
+                modifier = Modifier.fillMaxSize()
+                    .background(InkTheme.color.background)
+                    .displayCutoutPadding()
             ) {
                 when (screenState) {
                     is ScreenState.Configured -> DisplayScreen(screenState.config, screenState.connected, ::onButtonClick)
