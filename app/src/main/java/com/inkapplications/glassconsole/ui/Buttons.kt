@@ -12,6 +12,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.inkapplications.glassconsole.structures.Indicator
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 
 /**
@@ -20,12 +21,13 @@ import com.inkapplications.glassconsole.ui.theme.InkTheme
 @Composable
 fun Button(
     text: String,
+    indicator: Indicator = Indicator.Nominal,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .semantics { role = Role.Button }
-            .border(1.dp, InkTheme.color.accent, RoundedCornerShape(4.dp))
+            .border(1.dp, indicator.color, RoundedCornerShape(4.dp))
             .clickable(onClick = onClick)
             .padding(InkTheme.spacing.clickSafety)
     ) {

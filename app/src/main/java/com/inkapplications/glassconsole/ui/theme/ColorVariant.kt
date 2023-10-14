@@ -11,4 +11,9 @@ data class ColorVariant(
     val surface: Color,
     val accent: Color,
     val accentForeground: Color,
-)
+    val warning: Color,
+    val error: Color,
+    val success: Color,
+) {
+    val dimForeground: Color = foreground.copy(alpha = 0.4f)
+}

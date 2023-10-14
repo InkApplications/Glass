@@ -6,4 +6,5 @@ package com.inkapplications.glassconsole.structures
 data class Button(
     val text: String,
     val url: String,
+    val indicatorColor: Indicator,
 ): DisplayItem

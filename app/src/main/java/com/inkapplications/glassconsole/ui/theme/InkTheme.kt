@@ -15,6 +15,29 @@ import androidx.compose.ui.unit.sp
  * Application theme configurations for color/spacing/typography.
  */
 object InkTheme {
+    private object Palette {
+        val Black = Color(0xFF000000)
+        val White = Color(0xFFFFFFFF)
+        val TransluscentWhite = Color(0x80FFFFFF)
+        val Dark = Color(0xFF212121)
+        val TransluscentDark = Color(0x80212121)
+        val Light = Color(0xFFF8F8F8)
+        val Brand = Color(0xFF008DA9)
+        val Red = Color(0xFFf92772)
+        val Orange = Color(0xFFfe9720)
+        val Green = Color(0xFF00a600)
+        val Blue = Color(0xFF3495CC)
+        val Magenta = Color(0xFF9e6efe)
+
+        val ThemeAccent
+            @Composable
+            @ReadOnlyComposable get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                colorResource(android.R.color.system_accent1_400)
+            } else {
+                Brand
+            }
+    }
+
     val spacing
         @Composable
         @ReadOnlyComposable
@@ -31,23 +54,25 @@ object InkTheme {
         @ReadOnlyComposable
         get() = if (isSystemInDarkTheme()) {
             ColorVariant(
-                foreground = Color(0xFFFFFFFF),
-                background = Color(0xFF000000),
-                surface = Color(0xFF212121),
-                accent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    colorResource(android.R.color.system_accent1_400)
-                } else Color(0xFF008DA9),
-                accentForeground = Color(0xFFFFFFFF),
+                foreground = Palette.White,
+                background = Palette.Black,
+                surface = Palette.Dark,
+                accent = Palette.Brand,
+                accentForeground = Palette.White,
+                warning = Palette.Orange,
+                error = Palette.Red,
+                success = Palette.Green,
             )
         } else {
             ColorVariant(
-                foreground = Color(0xFF212121),
-                background = Color(0xFFFFFFFF),
-                surface = Color(0xFFF8F8F8),
-                accent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    colorResource(android.R.color.system_accent1_400)
-                } else Color(0xFF008DA9),
-                accentForeground = Color(0xFFFFFFFF),
+                foreground = Palette.Dark,
+                background = Palette.White,
+                surface = Palette.Light,
+                accent = Palette.Brand,
+                accentForeground = Palette.White,
+                warning = Palette.Orange,
+                error = Palette.Red,
+                success = Palette.Green,
             )
         }
 

@@ -19,6 +19,7 @@ sealed interface DisplayItem {
         val type: String,
         val text: String? = null,
         val url: String? = null,
+        val indicator: Indicator? = null,
     )
 
     /**
@@ -35,7 +36,7 @@ sealed interface DisplayItem {
                 "h2" -> H2(schema.text!!)
                 "h3" -> H3(schema.text!!)
                 "body" -> Body(schema.text!!)
-                "button" -> Button(schema.text!!, schema.url!!)
+                "button" -> Button(schema.text!!, schema.url!!, schema.indicator ?: Indicator.Nominal)
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
