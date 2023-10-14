@@ -41,8 +41,10 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.displayCutoutPadding()
             ) {
                 when (screenState) {
-                    is ScreenState.Configured -> DisplayScreen(screenState.config, ::onButtonClick)
-                    ScreenState.NoData -> EmptyScreen()
+                    is ScreenState.Configured -> DisplayScreen(screenState.config, screenState.connected, ::onButtonClick)
+                    ScreenState.Initial -> InitialScreen()
+                    ScreenState.NoConnection -> Disconnected()
+                    is ScreenState.NoData -> AwaitingConfig(screenState.ips)
                 }
             }
         }

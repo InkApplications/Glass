@@ -7,15 +7,29 @@ import com.inkapplications.glassconsole.structures.DisplayConfig
  */
 sealed interface ScreenState {
     /**
-     * State used when the application initially loads and has not yet
-     * been configured.
+     * Initial screen state before any data has been loaded.
      */
-    object NoData: ScreenState
+    object Initial: ScreenState
+
+    /**
+     * Screen State when the device has no network connection.
+     */
+    object NoConnection: ScreenState
+
+    /**
+     * Screen state shown when the device is listening for a connection.
+     */
+    data class NoData(
+        val ips: String,
+    ): ScreenState
 
     /**
      * State used when the application has received a configuration.
      *
      * @param config The configuration data to be displayed.
      */
-    data class Configured(val config: DisplayConfig): ScreenState
+    data class Configured(
+        val config: DisplayConfig,
+        val connected: Boolean,
+    ): ScreenState
 }
