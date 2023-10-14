@@ -12,42 +12,6 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = DisplayItem.Serializer::class)
 sealed interface DisplayItem {
     /**
-     * Large header text
-     */
-    data class H1(
-        val text: String,
-    ): DisplayItem
-
-    /**
-     * Medium header text
-     */
-    data class H2(
-        val text: String,
-    ): DisplayItem
-
-    /**
-     * Small header text
-     */
-    data class H3(
-        val text: String,
-    ): DisplayItem
-
-    /**
-     * Normal body text.
-     */
-    data class Body(
-        val text: String,
-    ): DisplayItem
-
-    /**
-     * A button that can be pressed to invoke a particular action.
-     */
-    data class Button(
-        val text: String,
-        val url: String,
-    ): DisplayItem
-
-    /**
      * Polymorphic schema for [DisplayItem] objects.
      */
     @Serializable

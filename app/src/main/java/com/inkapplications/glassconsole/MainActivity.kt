@@ -12,7 +12,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
-import com.inkapplications.glassconsole.structures.DisplayItem
+import com.inkapplications.glassconsole.structures.Button
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onButtonClick(item: DisplayItem.Button) {
+    private fun onButtonClick(item: Button) {
         lifecycleScope.launch(Dispatchers.IO) {
             ApplicationModule.httpClient.get(item.url)
         }
