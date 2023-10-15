@@ -43,6 +43,10 @@ sealed interface DisplayItem {
                     latching = schema.latching ?: false,
                     indicatorColor = schema.indicator ?: Indicator.Nominal
                 )
+                "status" -> Status(
+                    text = schema.text!!,
+                    indicator = schema.indicator!!,
+                )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
@@ -58,6 +62,11 @@ sealed interface DisplayItem {
                     text = value.text,
                     action = value.action,
                     latching = value.latching,
+                )
+                is Status -> JsonSchema(
+                    type = "status",
+                    text = value.text,
+                    indicator = value.indicator,
                 )
             }
             delegate.serialize(encoder, schema)

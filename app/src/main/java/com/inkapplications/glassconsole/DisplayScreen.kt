@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.inkapplications.glassconsole.structures.*
 import com.inkapplications.glassconsole.ui.Button
+import com.inkapplications.glassconsole.ui.Status
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 
 /**
@@ -45,6 +46,7 @@ fun DisplayScreen(
                 is H2 -> BasicText(text = item.text, style = InkTheme.typography.h2)
                 is H3 -> BasicText(text = item.text, style = InkTheme.typography.h3)
                 is Body -> BasicText(text = item.text, style = InkTheme.typography.body)
+                is Status -> Status(text = item.text, indicator = item.indicator)
             }
             Spacer(modifier = Modifier.padding(InkTheme.spacing.item))
         }
