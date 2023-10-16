@@ -1,8 +1,5 @@
 package com.inkapplications.glassconsole.structures
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import com.inkapplications.glassconsole.ui.theme.InkTheme
 import kotlinx.serialization.SerialName
 
 /**
@@ -44,16 +41,4 @@ enum class Indicator {
      */
     @SerialName("idle")
     Idle;
-
-    val color
-        @Composable
-        @ReadOnlyComposable
-        get() = when (this) {
-            Nominal -> InkTheme.color.foreground
-            Primary -> InkTheme.color.accent
-            Positive -> InkTheme.color.success
-            Danger -> InkTheme.color.warning
-            Negative -> InkTheme.color.error
-            Idle -> InkTheme.color.dimForeground
-        }
-    }
+}

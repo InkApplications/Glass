@@ -9,7 +9,12 @@ compose-bom = "2023.03.00"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[libraries.kotlinx-serialization-json]
+version = "1.3.3"
+module = "org.jetbrains.kotlinx:kotlinx-serialization-json"
 
 [libraries.core-ktx]
 version.ref = "core-ktx"
