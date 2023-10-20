@@ -1,6 +1,7 @@
 [versions]
 agp = "8.1.2"
 kotlin = "1.8.10"
+ktor = "2.3.5"
 core-ktx = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.0"
@@ -41,10 +42,6 @@ name = "ui"
 group = "androidx.compose.ui"
 name = "ui-graphics"
 
-[libraries.compose-ui-tooling]
-group = "androidx.compose.ui"
-name = "ui-tooling"
-
 [libraries.compose-foundation]
 module = "androidx.compose.foundation:foundation"
 
@@ -52,4 +49,40 @@ module = "androidx.compose.foundation:foundation"
 version = "1.6.1"
 module = "androidx.appcompat:appcompat"
 
+[libraries.ktor-server-core]
+version.ref = "ktor"
+module = "io.ktor:ktor-server-core"
+
+[libraries.ktor-server-netty]
+version.ref = "ktor"
+module = "io.ktor:ktor-server-netty"
+
+[libraries.ktor-server-cio]
+version.ref = "ktor"
+module = "io.ktor:ktor-server-cio"
+
+[libraries.ktor-server-content-negotiation]
+version.ref = "ktor"
+module = "io.ktor:ktor-server-content-negotiation"
+
+[libraries.ktor-serialization-kotlinx-json]
+version.ref = "ktor"
+module = "io.ktor:ktor-serialization-kotlinx-json"
+
+[libraries.ktor-client-core]
+version.ref = "ktor"
+module = "io.ktor:ktor-client-core"
+
+[libraries.ktor-client-cio]
+version.ref = "ktor"
+module = "io.ktor:ktor-client-cio"
+
+[libraries.ktor-client-content-negotiation]
+version.ref = "ktor"
+module = "io.ktor:ktor-client-content-negotiation"
+
 [bundles]
+androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]
+compose = ["compose-ui", "compose-ui-graphics", "compose-foundation"]
+ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-cio", "ktor-server-content-negotiation", "ktor-serialization-kotlinx-json"]
+ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
