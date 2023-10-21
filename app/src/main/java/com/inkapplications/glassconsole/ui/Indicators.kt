@@ -2,6 +2,7 @@ package com.inkapplications.glassconsole.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import com.inkapplications.glassconsole.R
 import com.inkapplications.glassconsole.structures.Indicator
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 
@@ -18,4 +19,14 @@ val Indicator.color
         Indicator.Danger -> InkTheme.color.warning
         Indicator.Negative -> InkTheme.color.error
         Indicator.Idle -> InkTheme.color.dimForeground
+    }
+
+val Indicator.sound
+    get() = when (this) {
+        Indicator.Nominal -> R.raw.nominal
+        Indicator.Primary -> R.raw.primary
+        Indicator.Positive -> R.raw.positive
+        Indicator.Danger -> R.raw.danger
+        Indicator.Negative -> R.raw.negative
+        Indicator.Idle -> R.raw.idle
     }

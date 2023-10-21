@@ -15,10 +15,16 @@ sealed interface Broadcast {
         val indicator: Indicator,
     ): Broadcast
 
+    data class Announcement(
+        val text: String,
+        val indicator: Indicator? = null,
+    ): Broadcast
+
     @Serializable
     private data class Schema(
         val type: String,
         val indicator: Indicator? = null,
+        val text: String? = null,
     )
 
     object Serializer: KSerializer<Broadcast> {
@@ -31,6 +37,10 @@ sealed interface Broadcast {
                 "ping" -> Ping(
                     indicator = schema.indicator ?: Indicator.Nominal,
                 )
+                "announcement" -> Announcement(
+                    text = schema.text!!,
+                    indicator = schema.indicator,
+                )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
@@ -38,6 +48,7 @@ sealed interface Broadcast {
         override fun serialize(encoder: Encoder, value: Broadcast) {
             val schema = when (value) {
                 is Ping -> Schema(type = "ping", indicator = value.indicator)
+                is Announcement -> Schema(type = "announcement", text = value.text, indicator = value.indicator)
             }
             delegate.serialize(encoder, schema)
         }

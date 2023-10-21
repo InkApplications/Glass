@@ -1,6 +1,8 @@
 package com.inkapplications.glassconsole
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -18,19 +20,24 @@ import com.inkapplications.glassconsole.android.playNotificationSound
 import com.inkapplications.glassconsole.structures.Broadcast
 import com.inkapplications.glassconsole.structures.ButtonItem
 import com.inkapplications.glassconsole.structures.Indicator
+import com.inkapplications.glassconsole.ui.sound
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 /**
  * Main screen of the application, shows the display as configured after
  * start-up.
  */
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     private val viewModel: DisplayViewModel by viewModels()
+    private lateinit var textToSpeech: TextToSpeech
+    private var ttsInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        textToSpeech = TextToSpeech(this, this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
@@ -68,18 +75,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onBroadcast(broadcast: Broadcast) {
+    private suspend fun onBroadcast(broadcast: Broadcast) {
         when (broadcast) {
-            is Broadcast.Ping -> {
-                when (broadcast.indicator) {
-                    Indicator.Nominal -> playNotificationSound(R.raw.nominal)
-                    Indicator.Primary -> playNotificationSound(R.raw.primary)
-                    Indicator.Positive -> playNotificationSound(R.raw.positive)
-                    Indicator.Danger -> playNotificationSound(R.raw.danger)
-                    Indicator.Negative -> playNotificationSound(R.raw.negative)
-                    Indicator.Idle -> playNotificationSound(R.raw.idle)
+            is Broadcast.Ping -> playNotificationSound(broadcast.indicator.sound)
+            is Broadcast.Announcement -> {
+                broadcast.indicator?.sound?.run { playNotificationSound(this) }
+                if (ttsInitialized) {
+                    textToSpeech.speak(broadcast.text, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
             }
         }
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported")
+            } else {
+                ttsInitialized = true
+            }
+        } else {
+            Log.e("TTS", "Initilization Failed")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        textToSpeech.shutdown()
     }
 }
