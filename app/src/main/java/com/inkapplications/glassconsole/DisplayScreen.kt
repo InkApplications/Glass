@@ -8,8 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.inkapplications.glassconsole.structures.*
-import com.inkapplications.glassconsole.ui.Button
-import com.inkapplications.glassconsole.ui.Status
+import com.inkapplications.glassconsole.ui.VerticalGridItemLayout
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 
 /**
@@ -19,11 +18,9 @@ import com.inkapplications.glassconsole.ui.theme.InkTheme
 fun DisplayScreen(
     config: DisplayConfig,
     connected: Boolean,
-    onButtonClick: (Button) -> Unit,
+    onButtonClick: (ButtonItem) -> Unit,
 ) {
-    Column(
-        modifier = Modifier.padding(InkTheme.spacing.gutter),
-    ) {
+    Column {
         if (!connected) {
             BasicText(
                 text = "No internet connection",
@@ -34,21 +31,9 @@ fun DisplayScreen(
             )
             Spacer(modifier = Modifier.padding(InkTheme.spacing.item))
         }
-        config.items.forEach { item ->
-            when (item) {
-                is Button -> Button(
-                    text = item.text,
-                    onClick = { onButtonClick(item) },
-                    indicator = item.indicatorColor,
-                    latching = item.latching,
-                )
-                is H1 -> BasicText(text = item.text, style = InkTheme.typography.h1)
-                is H2 -> BasicText(text = item.text, style = InkTheme.typography.h2)
-                is H3 -> BasicText(text = item.text, style = InkTheme.typography.h3)
-                is Body -> BasicText(text = item.text, style = InkTheme.typography.body)
-                is Status -> Status(text = item.text, indicator = item.indicator)
-            }
-            Spacer(modifier = Modifier.padding(InkTheme.spacing.item))
+
+        when (val layout = config.layout) {
+            is LayoutType.VerticalGrid -> VerticalGridItemLayout(layout, config.items, onButtonClick)
         }
     }
 }

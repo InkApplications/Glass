@@ -33,17 +33,17 @@ sealed interface DisplayItem {
         override fun deserialize(decoder: Decoder): DisplayItem {
             val schema = delegate.deserialize(decoder)
             return when (schema.type) {
-                "h1" -> H1(schema.text!!)
-                "h2" -> H2(schema.text!!)
-                "h3" -> H3(schema.text!!)
-                "body" -> Body(schema.text!!)
-                "button" -> Button(
+                "h1" -> TextItem.H1(schema.text!!)
+                "h2" -> TextItem.H2(schema.text!!)
+                "h3" -> TextItem.H3(schema.text!!)
+                "body" -> TextItem.Body(schema.text!!)
+                "button" -> ButtonItem(
                     text = schema.text!!,
                     action = schema.action!!,
                     latching = schema.latching ?: false,
                     indicatorColor = schema.indicator ?: Indicator.Nominal
                 )
-                "status" -> Status(
+                "status" -> StatusItem(
                     text = schema.text!!,
                     indicator = schema.indicator!!,
                 )
@@ -53,17 +53,17 @@ sealed interface DisplayItem {
 
         override fun serialize(encoder: Encoder, value: DisplayItem) {
             val schema = when (value) {
-                is H1 -> JsonSchema(type = "h1", text = value.text)
-                is H2 -> JsonSchema(type = "h2", text = value.text)
-                is H3 -> JsonSchema(type = "h3", text = value.text)
-                is Body -> JsonSchema(type = "body", text = value.text)
-                is Button -> JsonSchema(
+                is TextItem.H1 -> JsonSchema(type = "h1", text = value.text)
+                is TextItem.H2 -> JsonSchema(type = "h2", text = value.text)
+                is TextItem.H3 -> JsonSchema(type = "h3", text = value.text)
+                is TextItem.Body -> JsonSchema(type = "body", text = value.text)
+                is ButtonItem -> JsonSchema(
                     type = "button",
                     text = value.text,
                     action = value.action,
                     latching = value.latching,
                 )
-                is Status -> JsonSchema(
+                is StatusItem -> JsonSchema(
                     type = "status",
                     text = value.text,
                     indicator = value.indicator,

@@ -10,5 +10,10 @@ data class DisplayConfig(
     /**
      * A list of UI elements to be displayed.
      */
-    val items: List<DisplayItem>
+    val items: List<DisplayItem>,
+
+    /**
+     * The layout to use for the display.
+     */
+    val layout: LayoutType = LayoutType.VerticalGrid(1),
 )

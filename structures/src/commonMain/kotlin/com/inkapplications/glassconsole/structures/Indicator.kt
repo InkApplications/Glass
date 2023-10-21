@@ -1,10 +1,12 @@
 package com.inkapplications.glassconsole.structures
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Signifier that hints at the behavior of an element.
  */
+@Serializable
 enum class Indicator {
     /**
      * Use default signifiers

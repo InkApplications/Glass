@@ -14,7 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
-import com.inkapplications.glassconsole.structures.Button
+import com.inkapplications.glassconsole.structures.ButtonItem
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun onButtonClick(item: Button) {
+    private fun onButtonClick(item: ButtonItem) {
         lifecycleScope.launch(Dispatchers.IO) {
             ApplicationModule.actionClient.sendAction(item.action)
         }
