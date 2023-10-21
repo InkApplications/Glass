@@ -21,7 +21,16 @@ android {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        create("parameterSigning") {
+            storeFile = project.properties.getOrDefault("signingFile", null)
+                ?.toString()
+                ?.let { File("${project.rootDir}/$it") }
+            keyAlias = project.properties.getOrDefault("signingAlias", null)?.toString()
+            keyPassword = project.properties.getOrDefault("signingKeyPassword", null)?.toString()
+            storePassword = project.properties.getOrDefault("signingStorePassword", null)?.toString()
+        }
+    }
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -36,16 +45,6 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-        }
-    }
-    signingConfigs {
-        create("parameterSigning") {
-            storeFile = project.properties.getOrDefault("signingFile", null)
-                ?.toString()
-                ?.let { File("${project.rootDir}/$it") }
-            keyAlias = project.properties.getOrDefault("signingAlias", null)?.toString()
-            keyPassword = project.properties.getOrDefault("signingKeyPassword", null)?.toString()
-            storePassword = project.properties.getOrDefault("signingStorePassword", null)?.toString()
         }
     }
     compileOptions {
