@@ -13,8 +13,9 @@ android {
         applicationId = "com.inkapplications.glassconsole"
         minSdk = 21
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
+        versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
+        buildConfigField("String", "COMMIT", project.properties.getOrDefault("commit", null)?.let { "\"$it\"" } ?: "null")
 
         vectorDrawables {
             useSupportLibrary = true
@@ -22,8 +23,29 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "Glass*")
+        }
         release {
+            resValue("string", "app_name", "Glass")
             isMinifyEnabled = false
+            applicationIdSuffix = if (project.properties.getOrDefault("snapshot", "false") == "true") ".snapshot" else null
+            signingConfig = if (project.hasProperty("signingFile")) {
+                signingConfigs.getByName("parameterSigning")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+        }
+    }
+    signingConfigs {
+        create("parameterSigning") {
+            storeFile = project.properties.getOrDefault("signingFile", null)
+                ?.toString()
+                ?.let { File("${project.rootDir}/$it") }
+            keyAlias = project.properties.getOrDefault("signingAlias", null)?.toString()
+            keyPassword = project.properties.getOrDefault("signingKeyPassword", null)?.toString()
+            storePassword = project.properties.getOrDefault("signingStorePassword", null)?.toString()
         }
     }
     compileOptions {
@@ -35,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
