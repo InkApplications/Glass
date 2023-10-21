@@ -1,0 +1,41 @@
+name: Latest Build
+on:
+  push:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2.4.0
+      -
+        name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: adopt-openj9
+      -
+        name: Build
+        run: ./gradlew build test testDebugUnitTest bundleRelease -Psnapshot=true -Pcommit=${{ github.sha }} -PversionName=Snapshot -PversionCode=1
+      -
+        name: Prepare Uploads
+        run: |
+          mkdir -p build
+          mkdir -p build/output
+          cp app/build/outputs/apk/release/app-release.apk build/output/GlassConsole-${{ github.sha }}.apk
+          cp app/build/outputs/bundle/release/app-release.aab build/output/GlassConsole-${{ github.sha }}.aab
+      -
+        name: Archive APK
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: Android APK
+          path: build/output/Ack-${{ github.sha }}.apk
+          retention-days: 15
+      -
+        name: Archive Bundle
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: Android AAB
+          path: build/output/GlassConsole-${{ github.sha }}.aab
+          retention-days: 15

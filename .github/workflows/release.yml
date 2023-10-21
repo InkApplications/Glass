@@ -1,0 +1,89 @@
+on:
+  push:
+    tags: ['*']
+name: Release
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2.4.0
+      -
+        name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: adopt-openj9
+      -
+        name: Keystore Setup
+        run: echo "${{secrets.ANDROID_KEYSTORE_64}}" | base64 --decode > glassconsole.keystore
+      -
+        env:
+          ORG_GRADLE_PROJECT_signingFile: glassconsole.keystore
+          ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+        name: Build
+        run: ./gradlew build test testDebugUnitTest bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+      -
+        name: Prepare Uploads
+        run: |
+          mkdir -p build
+          mkdir -p build/output
+          cp app/build/outputs/apk/release/app-release.apk build/output/GlassConsole-${{ github.ref_name }}.apk
+          cp app/build/outputs/bundle/release/app-release.aab build/output/GlassConsole-${{ github.ref_name }}.aab
+      -
+        name: Archive APK
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: Android APK
+          path: build/output/GlassConsole-${{ github.ref_name }}.apk
+      -
+        name: Archive Bundle
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: Android AAB
+          path: build/output/GlassConsole-${{ github.ref_name }}.aab
+      -
+        name: Service Account Setup
+        run: echo '${{secrets.PLAY_CONSOLE_SERVICE_JSON}}' > service_account.json
+      -
+        name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+      -
+        name: Upload AAB Release Asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/output/GlassConsole-${{ github.ref_name }}.aab
+          asset_name: GlassConsole-${{ github.ref_name }}.aab
+          asset_content_type: application/octet-stream
+      -
+        name: Upload APK Release Asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/output/GlassConsole-${{ github.ref_name }}.apk
+          asset_name: GlassConsole-${{ github.ref_name }}.apk
+          asset_content_type: application/octet-stream
+      -
+        name: Deploy to Play Store
+        uses: r0adkll/upload-google-play@v1.0.15
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.inkapplications.glassconsole
+          releaseFile: build/output/GlassConsole-${{ github.ref_name }}.aab
+          track: internal
