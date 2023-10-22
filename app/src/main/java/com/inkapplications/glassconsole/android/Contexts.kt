@@ -12,15 +12,16 @@ import kotlin.coroutines.suspendCoroutine
  */
 suspend fun Context.playNotificationSound(@RawRes resourceId: Int) {
     suspendCoroutine { continuation ->
-        val mediaPlayer = MediaPlayer.create(this, resourceId)
-        mediaPlayer.setAudioAttributes(
+        val mediaPlayer = MediaPlayer.create(this, resourceId,
             AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-        )
-        mediaPlayer.start()
-
+                .build(),
+            22443
+            )
+        mediaPlayer.setOnPreparedListener {
+            mediaPlayer.start()
+        }
         mediaPlayer.setOnCompletionListener { mp ->
             mp.release()
             continuation.resume(Unit)
