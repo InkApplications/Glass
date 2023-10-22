@@ -19,13 +19,25 @@ jobs:
         name: Keystore Setup
         run: echo "${{secrets.ANDROID_KEYSTORE_64}}" | base64 --decode > glassconsole.keystore
       -
+        name: Test
+        run: ./gradlew check
+      -
         env:
           ORG_GRADLE_PROJECT_signingFile: glassconsole.keystore
           ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-        name: Build
-        run: ./gradlew build test testDebugUnitTest bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+        name: Build Android App
+        run: ./gradlew assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+      -
+        name: Build Metadata Publications
+        run: ./gradlew publishKotlinMultiplatformPublicationToBuildRepository -Pversion=${GITHUB_TAG/refs\/tags\//}
+      -
+        name: Build JVM Publications
+        run: ./gradlew publishJvmPublicationToBuildRepository -Pversion=${GITHUB_TAG/refs\/tags\//}
+      -
+        name: Build Linux Publications
+        run: ./gradlew publishLinuxX64PublicationToBuildRepository publishLinuxArm64PublicationToBuildRepository -Pversion=${GITHUB_TAG/refs\/tags\//}
       -
         name: Prepare Uploads
         run: |
@@ -34,11 +46,20 @@ jobs:
           cp app/build/outputs/apk/release/app-release.apk build/output/GlassConsole-${{ github.ref_name }}.apk
           cp app/build/outputs/bundle/release/app-release.aab build/output/GlassConsole-${{ github.ref_name }}.aab
       -
+        name: Zip All Publications
+        run: ./gradlew zipPublications
+      -
         name: Archive APK
         uses: actions/upload-artifact@v2.3.1
         with:
           name: Android APK
           path: build/output/GlassConsole-${{ github.ref_name }}.apk
+      -
+        name: Archive Dependencies
+        uses: actions/upload-artifact@v2
+        with:
+          name: Linux Publications
+          path: build/distributions/publications.zip
       -
         name: Archive Bundle
         uses: actions/upload-artifact@v2.3.1
@@ -87,3 +108,19 @@ jobs:
           packageName: com.inkapplications.glassconsole
           releaseFile: build/output/GlassConsole-${{ github.ref_name }}.aab
           track: internal
+      -
+        name: Maven Publish
+        env:
+          GITHUB_TAG: ${{ github.ref }}
+          ORG_GRADLE_PROJECT_mavenUser: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.PGP_INK_CI_KEYID }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_INK_CI_PRIVATE }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_INK_CI_PASSWORD }}
+        run: >
+          ./gradlew
+          publishKotlinMultiplatformPublicationToMavenCentralRepository
+          publishJvmPublicationToMavenCentralRepository
+          publishLinuxX64PublicationToMavenCentralRepository
+          publishLinuxArm64PublicationToMavenCentralRepository
+          -Pversion=${GITHUB_TAG/refs\/tags\//}

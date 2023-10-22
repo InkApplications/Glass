@@ -28,7 +28,7 @@ fun VerticalGridItemLayout(
     ) {
         items(items) { item ->
             Box(
-                modifier = Modifier.padding(InkTheme.spacing.item)
+                modifier = Modifier.padding(InkTheme.spacing.item),
             ) {
                 Item(item, onButtonClick)
             }
