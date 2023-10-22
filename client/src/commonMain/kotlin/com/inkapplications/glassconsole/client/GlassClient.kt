@@ -1,8 +1,10 @@
 package com.inkapplications.glassconsole.client
 
+import com.inkapplications.glassconsole.structures.Broadcast
 import com.inkapplications.glassconsole.structures.DisplayConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -38,10 +40,31 @@ class GlassClient {
     ) {
         httpClient.put {
             url.host = host
-            url.protocol = URLProtocol.HTTPS
+            url.protocol = URLProtocol.HTTP
             url.port = port
             contentType(ContentType.Application.Json)
             setBody(config)
+        }
+    }
+
+    /**
+     * Send audible feedback to be played on the display
+     *
+     * @param broadcast Configuration for the broadcast to be played.
+     * @param host The IP or hostname of the device to be configured
+     * @param port The port that the display server is running on for the display device (default: 8080)
+     */
+    suspend fun broadcast(
+        broadcast: Broadcast,
+        host: String,
+        port: Int = 8080,
+    ) {
+        httpClient.post {
+            url.host = host
+            url.protocol = URLProtocol.HTTP
+            url.port = port
+            contentType(ContentType.Application.Json)
+            setBody(broadcast)
         }
     }
 }
