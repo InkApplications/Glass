@@ -3,13 +3,37 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.ink.publishing) apply false
+    id("maven-publish")
 }
 
 gradle.startParameter.excludedTaskNames.add("lint")
 
-tasks.create("zipPublications", Zip::class) {
-    from("client/build/repo/")
-    from("structures/build/repo/")
-    archiveFileName.set("publications.zip")
+publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                name.set("GlassConsole ${project.name}")
+                description.set("Display server and SDK for arbitrary UI control")
+                url.set("https://glass.inkapplications.com")
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://choosealicense.com/licenses/mit/")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("reneevandervelde")
+                        name.set("Renee Vandervelde")
+                        email.set("Renee@InkApplications.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/InkApplications/GlassConsole.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:InkApplications/GlassConsole.git")
+                    url.set("https://github.com/InkApplications/GlassConsole")
+                }
+            }
+        }
+    }
 }
