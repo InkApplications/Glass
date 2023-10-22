@@ -77,6 +77,10 @@ module = "io.ktor:ktor-client-core"
 version.ref = "ktor"
 module = "io.ktor:ktor-client-cio"
 
+[libraries.ktor-client-okhttp]
+version.ref = "ktor"
+module = "io.ktor:ktor-client-okhttp"
+
 [libraries.ktor-client-content-negotiation]
 version.ref = "ktor"
 module = "io.ktor:ktor-client-content-negotiation"
@@ -84,5 +88,5 @@ module = "io.ktor:ktor-client-content-negotiation"
 [bundles]
 androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]
 compose = ["compose-ui", "compose-ui-graphics", "compose-foundation"]
-ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-cio", "ktor-server-content-negotiation", "ktor-serialization-kotlinx-json"]
-ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-content-negotiation", "ktor-serialization-kotlinx-json"]
+ktor-client = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]

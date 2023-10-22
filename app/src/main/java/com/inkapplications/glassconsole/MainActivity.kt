@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
                 onBroadcast(broadcast)
             }
         }
-        
+
         setContent {
             val screenState = viewModel.state.collectAsState().value
 

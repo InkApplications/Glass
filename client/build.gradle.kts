@@ -21,6 +21,7 @@ kotlin {
             dependencies {
                 api(projects.structures)
                 implementation(libs.bundles.ktor.client)
+                implementation(libs.ktor.client.cio)
             }
         }
     }

@@ -78,4 +78,6 @@ dependencies {
 
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
+    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.client.okhttp)
 }
