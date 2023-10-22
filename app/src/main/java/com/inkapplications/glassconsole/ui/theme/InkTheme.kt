@@ -52,7 +52,7 @@ object InkTheme {
     val color
         @Composable
         @ReadOnlyComposable
-        get() = if (isSystemInDarkTheme()) {
+        get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || isSystemInDarkTheme()) {
             ColorVariant(
                 foreground = Palette.White,
                 background = Palette.Black,
