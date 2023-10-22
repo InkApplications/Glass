@@ -119,5 +119,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_INK_CI_PASSWORD }}
         run: >
           ./gradlew
-          publishAllPublicationsToMavenCentralRepository
+          publishKotlinMultiplatformPublicationToMavenCentralRepository
+          publishJvmPublicationToMavenCentralRepository
+          publishLinuxX64PublicationToMavenCentralRepository
+          publishLinuxArm64PublicationToMavenCentralRepository
           -Pversion=${GITHUB_TAG/refs\/tags\//}

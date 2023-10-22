@@ -1,21 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    id("maven-publish")
+    id("library")
+    id("com.inkapplications.publishing")
 }
 
 kotlin {
-    jvm {
-        compilations.all {
-            compilerOptions.configure {
-                jvmTarget.set(JvmTarget.JVM_1_8)
-            }
-        }
-    }
-
-    linuxX64()
-    linuxArm64()
 
     sourceSets {
         val commonMain by getting {
