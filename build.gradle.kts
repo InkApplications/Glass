@@ -4,12 +4,23 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     id("maven-publish")
+    id("signing")
 }
 
 gradle.startParameter.excludedTaskNames.add("lint")
 
 publishing {
     publications {
+        repositories {
+            maven {
+                name = "MavenCentral"
+                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = project.properties.getOrDefault("mavenUser", null)?.toString()
+                    password = project.properties.getOrDefault("mavenPassword", null)?.toString()
+                }
+            }
+        }
         withType<MavenPublication> {
             pom {
                 name.set("GlassConsole ${project.name}")
@@ -35,5 +46,16 @@ publishing {
                 }
             }
         }
+    }
+}
+signing {
+    val signingKey = project.properties.getOrDefault("signingKey", null)?.toString()
+    val signingKeyId = project.properties.getOrDefault("signingKeyId", null)?.toString()
+    val signingPassword = project.properties.getOrDefault("signingPassword", null)?.toString()
+    val shouldSign = signingKeyId != null && signingKey != null && signingPassword != null
+
+    if (shouldSign) {
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        sign(publishing.publications)
     }
 }
