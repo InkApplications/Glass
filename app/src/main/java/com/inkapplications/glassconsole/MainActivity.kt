@@ -3,6 +3,7 @@ package com.inkapplications.glassconsole
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import com.inkapplications.glassconsole.android.playNotificationSound
 import com.inkapplications.glassconsole.structures.Broadcast
 import com.inkapplications.glassconsole.structures.ButtonItem
-import com.inkapplications.glassconsole.structures.Indicator
 import com.inkapplications.glassconsole.ui.sound
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,9 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         textToSpeech = TextToSpeech(this, this)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -51,11 +53,13 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
                 onBroadcast(broadcast)
             }
         }
+        
         setContent {
             val screenState = viewModel.state.collectAsState().value
 
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .background(InkTheme.color.background)
                     .displayCutoutPadding()
             ) {
