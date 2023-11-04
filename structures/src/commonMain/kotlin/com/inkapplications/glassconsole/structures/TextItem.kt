@@ -8,6 +8,7 @@ sealed interface TextItem: DisplayItem {
      */
     data class H1(
         override val text: String,
+        override val span: Int,
     ) : TextItem
 
     /**
@@ -15,6 +16,7 @@ sealed interface TextItem: DisplayItem {
      */
     data class H2(
         override val text: String,
+        override val span: Int,
     ) : TextItem
 
     /**
@@ -22,6 +24,7 @@ sealed interface TextItem: DisplayItem {
      */
     data class H3(
         override val text: String,
+        override val span: Int,
     ) : TextItem
 
     /**
@@ -29,5 +32,6 @@ sealed interface TextItem: DisplayItem {
      */
     data class Body(
         override val text: String,
+        override val span: Int,
     ) : TextItem
 }

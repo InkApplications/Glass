@@ -10,7 +10,7 @@ import kotlinx.serialization.encoding.Encoder
  * UI element configuration to be displayed on the screen.
  */
 @Serializable(with = DisplayItem.Serializer::class)
-sealed interface DisplayItem {
+sealed interface DisplayItem: Spanable {
     /**
      * Polymorphic schema for [DisplayItem] objects.
      */
@@ -21,6 +21,7 @@ sealed interface DisplayItem {
         val action: Action? = null,
         val latching: Boolean? = null,
         val indicator: Indicator? = null,
+        val span: Int = 1,
     )
 
     /**
@@ -33,19 +34,33 @@ sealed interface DisplayItem {
         override fun deserialize(decoder: Decoder): DisplayItem {
             val schema = delegate.deserialize(decoder)
             return when (schema.type) {
-                "h1" -> TextItem.H1(schema.text!!)
-                "h2" -> TextItem.H2(schema.text!!)
-                "h3" -> TextItem.H3(schema.text!!)
-                "body" -> TextItem.Body(schema.text!!)
+                "h1" -> TextItem.H1(
+                    text = schema.text!!,
+                    span = schema.span,
+                )
+                "h2" -> TextItem.H2(
+                    text = schema.text!!,
+                    span = schema.span,
+                )
+                "h3" -> TextItem.H3(
+                    text = schema.text!!,
+                    span = schema.span,
+                )
+                "body" -> TextItem.Body(
+                    text = schema.text!!,
+                    span = schema.span,
+                )
                 "button" -> ButtonItem(
                     text = schema.text!!,
                     action = schema.action!!,
                     latching = schema.latching ?: false,
-                    indicatorColor = schema.indicator ?: Indicator.Nominal
+                    indicatorColor = schema.indicator ?: Indicator.Nominal,
+                    span = schema.span,
                 )
                 "status" -> StatusItem(
                     text = schema.text!!,
                     indicator = schema.indicator!!,
+                    span = schema.span,
                 )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
