@@ -15,22 +15,20 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.Json
 
 /**
  * HTTP Server listening for display instructions.
  */
 class DisplayServer {
-    private val currentConfig: MutableStateFlow<DisplayConfig?> = MutableStateFlow(null)
+    private val currentConfig = MutableSharedFlow<DisplayConfig?>()
     private val mutableBroadcasts = MutableSharedFlow<Broadcast>()
 
     /**
      * The current configuration settings for the display.
      */
-    val config: StateFlow<DisplayConfig?> = currentConfig
+    val config: SharedFlow<DisplayConfig?> = currentConfig
 
     /**
      * Broadcasts sent to the display.
@@ -58,7 +56,7 @@ class DisplayServer {
                         android.util.Log.e("Server", "Error Receiving Request", e)
                         throw e
                     }
-                    currentConfig.value = config
+                    currentConfig.emit(config)
                     call.respond(HttpStatusCode.NoContent)
                 }
                 post("/broadcast") {

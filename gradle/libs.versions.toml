@@ -18,6 +18,10 @@ module = "org.jetbrains.kotlin:kotlin-gradle-plugin"
 version.ref = "kotlin"
 module = "org.jetbrains.kotlin:kotlin-serialization"
 
+[libraries.kotlinx-datetime]
+version = "0.4.1"
+module = "org.jetbrains.kotlinx:kotlinx-datetime"
+
 [libraries.ink-publishing]
 version = "1.0.2"
 module = "com.inkapplications.publishing:ink-publishing"
