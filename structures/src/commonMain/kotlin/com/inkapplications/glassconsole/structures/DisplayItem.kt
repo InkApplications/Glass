@@ -69,6 +69,10 @@ sealed interface DisplayItem: Spanable, Positionable {
                     span = schema.span,
                     position = schema.position,
                 )
+                "spacer" -> SpacerItem(
+                    span = schema.span,
+                    position = schema.position,
+                )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
@@ -112,6 +116,11 @@ sealed interface DisplayItem: Spanable, Positionable {
                     type = "status",
                     text = value.text,
                     indicator = value.indicator,
+                    position = value.position,
+                    span = value.span,
+                )
+                is SpacerItem -> JsonSchema(
+                    type = "spacer",
                     position = value.position,
                     span = value.span,
                 )
