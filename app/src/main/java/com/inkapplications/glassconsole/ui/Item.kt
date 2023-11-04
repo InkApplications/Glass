@@ -20,7 +20,7 @@ fun Item(
         is ButtonItem -> Button(
             text = item.text,
             onClick = { onButtonClick(item) },
-            indicator = item.indicatorColor,
+            indicator = item.indicator,
             latching = item.latching,
         )
         is TextItem.H1 -> BasicText(text = item.text, style = InkTheme.typography.h1)

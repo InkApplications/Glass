@@ -9,5 +9,5 @@ data class ButtonItem(
     val text: String,
     val action: Action,
     val latching: Boolean,
-    val indicatorColor: Indicator,
+    val indicator: Indicator,
 ): DisplayItem

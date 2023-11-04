@@ -59,7 +59,7 @@ sealed interface DisplayItem: Spanable, Positionable {
                     text = schema.text!!,
                     action = schema.action!!,
                     latching = schema.latching ?: false,
-                    indicatorColor = schema.indicator ?: Indicator.Nominal,
+                    indicator = schema.indicator ?: Indicator.Nominal,
                     span = schema.span,
                     position = schema.position,
                 )
