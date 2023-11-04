@@ -75,20 +75,45 @@ sealed interface DisplayItem: Spanable, Positionable {
 
         override fun serialize(encoder: Encoder, value: DisplayItem) {
             val schema = when (value) {
-                is TextItem.H1 -> JsonSchema(type = "h1", text = value.text)
-                is TextItem.H2 -> JsonSchema(type = "h2", text = value.text)
-                is TextItem.H3 -> JsonSchema(type = "h3", text = value.text)
-                is TextItem.Body -> JsonSchema(type = "body", text = value.text)
+                is TextItem.H1 -> JsonSchema(
+                    type = "h1",
+                    text = value.text,
+                    position = value.position,
+                    span = value.span,
+                )
+                is TextItem.H2 -> JsonSchema(
+                    type = "h2",
+                    text = value.text,
+                    position = value.position,
+                    span = value.span,
+                )
+                is TextItem.H3 -> JsonSchema(
+                    type = "h3",
+                    text = value.text,
+                    position = value.position,
+                    span = value.span,
+                )
+                is TextItem.Body -> JsonSchema(
+                    type = "body",
+                    text = value.text,
+                    position = value.position,
+                    span = value.span,
+                )
                 is ButtonItem -> JsonSchema(
                     type = "button",
                     text = value.text,
                     action = value.action,
                     latching = value.latching,
+                    indicator = value.indicator,
+                    position = value.position,
+                    span = value.span,
                 )
                 is StatusItem -> JsonSchema(
                     type = "status",
                     text = value.text,
                     indicator = value.indicator,
+                    position = value.position,
+                    span = value.span,
                 )
             }
             delegate.serialize(encoder, schema)
