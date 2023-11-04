@@ -8,8 +8,8 @@ sealed interface TextItem: DisplayItem {
      */
     data class H1(
         override val text: String,
-        override val span: Int,
-        override val position: Position,
+        override val span: Int = 1,
+        override val position: Position = Position.Default,
     ) : TextItem
 
     /**
@@ -17,8 +17,8 @@ sealed interface TextItem: DisplayItem {
      */
     data class H2(
         override val text: String,
-        override val span: Int,
-        override val position: Position,
+        override val span: Int = 1,
+        override val position: Position = Position.Default,
     ) : TextItem
 
     /**
@@ -26,8 +26,8 @@ sealed interface TextItem: DisplayItem {
      */
     data class H3(
         override val text: String,
-        override val span: Int,
-        override val position: Position,
+        override val span: Int = 1,
+        override val position: Position = Position.Default,
     ) : TextItem
 
     /**
@@ -35,7 +35,7 @@ sealed interface TextItem: DisplayItem {
      */
     data class Body(
         override val text: String,
-        override val span: Int,
-        override val position: Position,
+        override val span: Int = 1,
+        override val position: Position = Position.Default,
     ) : TextItem
 }
