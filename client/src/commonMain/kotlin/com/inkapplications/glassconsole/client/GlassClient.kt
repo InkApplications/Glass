@@ -7,9 +7,11 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -38,13 +40,17 @@ class GlassClient {
         host: String,
         port: Int = 8080,
     ) {
-        httpClient.put {
+        val response = httpClient.put {
             url.host = host
             url.protocol = URLProtocol.HTTP
             url.port = port
             contentType(ContentType.Application.Json)
             setBody(config)
         }
+
+        if (response.status.isSuccess()) return
+
+        throw HttpException(response.status.value, response.bodyAsText())
     }
 
     /**
@@ -59,12 +65,16 @@ class GlassClient {
         host: String,
         port: Int = 8080,
     ) {
-        httpClient.post {
+        val response = httpClient.post {
             url.host = host
             url.protocol = URLProtocol.HTTP
             url.port = port
             contentType(ContentType.Application.Json)
             setBody(broadcast)
         }
+
+        if (response.status.isSuccess()) return
+
+        throw HttpException(response.status.value, response.bodyAsText())
     }
 }
