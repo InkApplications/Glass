@@ -5,6 +5,7 @@ package com.inkapplications.glassconsole.structures
  */
 data class StatusItem(
     override val span: Int,
+    override val position: Position,
     val text: String,
     val indicator: Indicator,
 ): DisplayItem

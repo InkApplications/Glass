@@ -10,7 +10,7 @@ import kotlinx.serialization.encoding.Encoder
  * UI element configuration to be displayed on the screen.
  */
 @Serializable(with = DisplayItem.Serializer::class)
-sealed interface DisplayItem: Spanable {
+sealed interface DisplayItem: Spanable, Positionable {
     /**
      * Polymorphic schema for [DisplayItem] objects.
      */
@@ -22,6 +22,7 @@ sealed interface DisplayItem: Spanable {
         val latching: Boolean? = null,
         val indicator: Indicator? = null,
         val span: Int = 1,
+        val position: Position = Position.Default,
     )
 
     /**
@@ -37,18 +38,22 @@ sealed interface DisplayItem: Spanable {
                 "h1" -> TextItem.H1(
                     text = schema.text!!,
                     span = schema.span,
+                    position = schema.position,
                 )
                 "h2" -> TextItem.H2(
                     text = schema.text!!,
                     span = schema.span,
+                    position = schema.position,
                 )
                 "h3" -> TextItem.H3(
                     text = schema.text!!,
                     span = schema.span,
+                    position = schema.position,
                 )
                 "body" -> TextItem.Body(
                     text = schema.text!!,
                     span = schema.span,
+                    position = schema.position,
                 )
                 "button" -> ButtonItem(
                     text = schema.text!!,
@@ -56,11 +61,13 @@ sealed interface DisplayItem: Spanable {
                     latching = schema.latching ?: false,
                     indicatorColor = schema.indicator ?: Indicator.Nominal,
                     span = schema.span,
+                    position = schema.position,
                 )
                 "status" -> StatusItem(
                     text = schema.text!!,
                     indicator = schema.indicator!!,
                     span = schema.span,
+                    position = schema.position,
                 )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }

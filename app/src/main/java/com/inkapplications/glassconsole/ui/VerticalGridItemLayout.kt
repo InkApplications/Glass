@@ -8,10 +8,12 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.inkapplications.glassconsole.structures.ButtonItem
 import com.inkapplications.glassconsole.structures.DisplayItem
 import com.inkapplications.glassconsole.structures.LayoutType
+import com.inkapplications.glassconsole.structures.Position
 import com.inkapplications.glassconsole.ui.theme.InkTheme
 
 /**
@@ -35,6 +37,10 @@ fun VerticalGridItemLayout(
         ) { item ->
             Box(
                 modifier = Modifier.padding(InkTheme.spacing.item),
+                contentAlignment = when (item.position) {
+                    Position.Centered -> Alignment.Center
+                    else -> Alignment.TopStart
+                }
             ) {
                 Item(item, onButtonClick)
             }

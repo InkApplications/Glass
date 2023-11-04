@@ -5,6 +5,7 @@ package com.inkapplications.glassconsole.structures
  */
 data class ButtonItem(
     override val span: Int,
+    override val position: Position,
     val text: String,
     val action: Action,
     val latching: Boolean,
