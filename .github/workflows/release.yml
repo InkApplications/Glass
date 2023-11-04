@@ -20,7 +20,7 @@ jobs:
         run: echo "${{secrets.ANDROID_KEYSTORE_64}}" | base64 --decode > glassconsole.keystore
       -
         name: Test
-        run: ./gradlew check
+        run: ./gradlew --no-daemon check
       -
         env:
           ORG_GRADLE_PROJECT_signingFile: glassconsole.keystore
@@ -28,13 +28,13 @@ jobs:
           ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
         name: Build Android App
-        run: ./gradlew assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+        run: ./gradlew --no-daemon assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
       -
         name: Build Client Publication
-        run: ./gradlew client:build -Pversion=${GITHUB_TAG/refs\/tags\//}
+        run: ./gradlew --no-daemon client:build -Pversion=${GITHUB_TAG/refs\/tags\//}
       -
         name: Build Structures Publication
-        run: ./gradlew structures:build -Pversion=${GITHUB_TAG/refs\/tags\//}
+        run: ./gradlew --no-daemon structures:build -Pversion=${GITHUB_TAG/refs\/tags\//}
       -
         name: Prepare Uploads
         run: |
@@ -118,7 +118,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_INK_CI_PRIVATE }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_INK_CI_PASSWORD }}
         run: >
-          ./gradlew
+          ./gradlew --no-daemon
           publishKotlinMultiplatformPublicationToMavenCentralRepository
           publishJvmPublicationToMavenCentralRepository
           publishLinuxX64PublicationToMavenCentralRepository

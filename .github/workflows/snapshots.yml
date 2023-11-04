@@ -17,7 +17,7 @@ jobs:
           distribution: adopt-openj9
       -
         name: Build
-        run: ./gradlew build test testDebugUnitTest bundleRelease -Psnapshot=true -Pcommit=${{ github.sha }} -PversionName=Snapshot -PversionCode=1
+        run: ./gradlew --no-daemon build test testDebugUnitTest bundleRelease -Psnapshot=true -Pcommit=${{ github.sha }} -PversionName=Snapshot -PversionCode=1
       -
         name: Prepare Uploads
         run: |
