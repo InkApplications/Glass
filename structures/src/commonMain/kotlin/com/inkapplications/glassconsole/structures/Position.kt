@@ -8,7 +8,7 @@ import kotlin.jvm.JvmInline
  */
 @Serializable
 @JvmInline
-value class Position(private val key: String) {
+value class Position(val key: String) {
     companion object {
         val Default = Position("default")
         val Centered = Position("centered")
