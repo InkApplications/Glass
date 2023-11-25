@@ -23,8 +23,8 @@ jobs:
         run: |
           mkdir -p build
           mkdir -p build/output
-          cp app/build/outputs/apk/release/app-release.apk build/output/GlassConsole-${{ github.sha }}.apk
-          cp app/build/outputs/bundle/release/app-release.aab build/output/GlassConsole-${{ github.sha }}.aab
+          cp android/build/outputs/apk/release/android-release.apk build/output/GlassConsole-${{ github.sha }}.apk
+          cp android/build/outputs/bundle/release/android-release.aab build/output/GlassConsole-${{ github.sha }}.aab
       -
         name: Archive APK
         uses: actions/upload-artifact@v2.3.1
