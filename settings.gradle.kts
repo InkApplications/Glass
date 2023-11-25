@@ -15,6 +15,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "glass-console"
-include(":app")
+include(":android")
 include(":client")
 include(":structures")
