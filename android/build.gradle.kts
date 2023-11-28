@@ -79,4 +79,7 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     implementation(libs.ktor.server.cio)
     implementation(libs.ktor.client.okhttp)
+    implementation(libs.ink.regolith.init)
+    implementation(libs.ink.regolith.processes)
+    implementation(libs.kimchi.core)
 }

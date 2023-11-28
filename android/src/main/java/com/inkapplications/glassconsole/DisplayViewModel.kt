@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-@OptIn(ExperimentalCoroutinesApi::class)
+
 class DisplayViewModel: ViewModel() {
-    private val latestConfig = ApplicationModule.displayServer.config
+    private val latestConfig = DisplayApplication.module.displayServer.config
         .onStart { emit(null) }
         .flatMapLatest { config ->
             when (val expiration = config?.expiration) {
@@ -28,7 +28,7 @@ class DisplayViewModel: ViewModel() {
 
     val state = combine(
         latestConfig,
-        ApplicationModule.ipProvider.currentIps,
+        DisplayApplication.module.ipProvider.currentIps,
     ) { config, ips ->
         when {
             config != null -> ScreenState.Configured(config, ips.isNotEmpty())

@@ -17,11 +17,12 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.json.Json
+import regolith.processes.daemon.Daemon
 
 /**
  * HTTP Server listening for display instructions.
  */
-class DisplayServer {
+class DisplayServer: Daemon {
     private val currentConfig = MutableSharedFlow<DisplayConfig?>()
     private val mutableBroadcasts = MutableSharedFlow<Broadcast>()
 
@@ -35,13 +36,8 @@ class DisplayServer {
      */
     val broadcasts: SharedFlow<Broadcast> = mutableBroadcasts
 
-    /**
-     * Start the HTTP server to listen for display requests.
-     *
-     * @param port The http port to listen on.
-     */
-    suspend fun start(port: Int = 8080) {
-        embeddedServer(CIO, port = port) {
+    override suspend fun startDaemon(): Nothing {
+        embeddedServer(CIO, port = 8080) {
             install(ContentNegotiation) {
                 json(Json {
                     prettyPrint = true
@@ -72,5 +68,6 @@ class DisplayServer {
                 }
             }
         }.start(wait = true)
+        throw IllegalStateException("Server stopped unexpectedly")
     }
 }

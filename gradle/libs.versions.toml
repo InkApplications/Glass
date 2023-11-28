@@ -5,6 +5,7 @@ core-ktx = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.0"
 compose-bom = "2023.03.00"
+regolith = "1.0.1"
 
 [libraries.android-gradle]
 version = "8.1.2"
@@ -21,6 +22,18 @@ module = "org.jetbrains.kotlin:kotlin-serialization"
 [libraries.kotlinx-datetime]
 version = "0.4.1"
 module = "org.jetbrains.kotlinx:kotlinx-datetime"
+
+[libraries.kimchi-core]
+version = "2.0.3"
+module = "com.inkapplications.kimchi:core"
+
+[libraries.ink-regolith-init]
+version.ref = "regolith"
+module = "com.inkapplications.regolith:init"
+
+[libraries.ink-regolith-processes]
+version.ref = "regolith"
+module = "com.inkapplications.regolith:processes"
 
 [libraries.ink-publishing]
 version = "1.0.2"
