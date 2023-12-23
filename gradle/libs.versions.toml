@@ -5,7 +5,7 @@ core-ktx = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.0"
 compose-bom = "2023.03.00"
-regolith = "1.0.1"
+regolith = "1.1.0"
 
 [libraries.android-gradle]
 version = "8.1.2"
@@ -34,6 +34,10 @@ module = "com.inkapplications.regolith:init"
 [libraries.ink-regolith-processes]
 version.ref = "regolith"
 module = "com.inkapplications.regolith:processes"
+
+[libraries.ink-regolith-resources]
+version.ref = "regolith"
+module = "com.inkapplications.regolith:resources"
 
 [libraries.ink-publishing]
 version = "1.0.2"
@@ -116,3 +120,4 @@ androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity
 compose = ["compose-ui", "compose-ui-graphics", "compose-foundation"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-content-negotiation", "ktor-serialization-kotlinx-json"]
 ktor-client = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+regolith = ["ink-regolith-init", "ink-regolith-processes", "ink-regolith-resources"]
