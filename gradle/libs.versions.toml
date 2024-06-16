@@ -1,11 +1,12 @@
 [versions]
-kotlin = "1.8.22"
+kotlin = "1.9.21"
 ktor = "2.3.3"
 core-ktx = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.0"
 compose-bom = "2023.03.00"
 regolith = "1.1.0"
+ink-ui = "0.3.1"
 
 [libraries.android-gradle]
 version = "8.1.2"
@@ -18,6 +19,10 @@ module = "org.jetbrains.kotlin:kotlin-gradle-plugin"
 [libraries.kotlinx-serialization-gradle]
 version.ref = "kotlin"
 module = "org.jetbrains.kotlin:kotlin-serialization"
+
+[libraries.kotlinx-serialization-json]
+version = "1.3.3"
+module = "org.jetbrains.kotlinx:kotlinx-serialization-json"
 
 [libraries.kotlinx-datetime]
 version = "0.4.1"
@@ -42,10 +47,6 @@ module = "com.inkapplications.regolith:resources"
 [libraries.ink-publishing]
 version = "1.0.2"
 module = "com.inkapplications.publishing:ink-publishing"
-
-[libraries.kotlinx-serialization-json]
-version = "1.3.3"
-module = "org.jetbrains.kotlinx:kotlinx-serialization-json"
 
 [libraries.core-ktx]
 version.ref = "core-ktx"
@@ -114,6 +115,14 @@ module = "io.ktor:ktor-client-okhttp"
 [libraries.ktor-client-content-negotiation]
 version.ref = "ktor"
 module = "io.ktor:ktor-client-content-negotiation"
+
+[libraries.ink-ui-structures]
+version.ref = "ink-ui"
+module = "com.inkapplications.ui:structures"
+
+[libraries.ink-ui-render-compose]
+version.ref = "ink-ui"
+module = "com.inkapplications.ui:render-compose"
 
 [bundles]
 androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]

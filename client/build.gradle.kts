@@ -2,11 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("library")
-    id("com.inkapplications.publishing")
 }
 
 kotlin {
-
     sourceSets {
         val commonMain by getting {
             dependencies {

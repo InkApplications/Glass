@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.inkapplications.glassconsole"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.inkapplications.glassconsole"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
         versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
         buildConfigField("String", "COMMIT", project.properties.getOrDefault("commit", null)?.let { "\"$it\"" } ?: "null")
@@ -58,7 +58,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -75,6 +75,7 @@ dependencies {
 
     implementation(projects.structures)
     implementation(libs.bundles.regolith)
+    implementation(libs.ink.ui.render.compose)
 
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)

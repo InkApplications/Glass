@@ -5,7 +5,7 @@ import android.speech.tts.TextToSpeech
 import com.inkapplications.glassconsole.android.playNotificationSound
 import com.inkapplications.glassconsole.server.DisplayServer
 import com.inkapplications.glassconsole.structures.Broadcast
-import com.inkapplications.glassconsole.ui.sound
+import ink.ui.structures.Sentiment
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.collectLatest
 import regolith.processes.daemon.Daemon
@@ -48,8 +48,18 @@ class Broadcaster(
 
     private suspend fun onBroadcast(broadcast: Broadcast) {
         when (broadcast) {
-            is Broadcast.Ping -> application.playNotificationSound(broadcast.indicator.sound)
+            is Broadcast.Ping -> application.playNotificationSound(broadcast.sentiment.sound)
             is Broadcast.Announcement -> onAnnouncement(broadcast)
-            }
         }
     }
+
+    val Sentiment.sound
+        get() = when (this) {
+            Sentiment.Primary -> R.raw.primary
+            Sentiment.Positive -> R.raw.positive
+            Sentiment.Caution -> R.raw.caution
+            Sentiment.Negative -> R.raw.negative
+            Sentiment.Idle -> R.raw.idle
+            else -> R.raw.nominal
+        }
+}

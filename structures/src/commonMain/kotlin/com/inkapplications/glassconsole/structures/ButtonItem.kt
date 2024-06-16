@@ -1,13 +1,16 @@
 package com.inkapplications.glassconsole.structures
 
+import ink.ui.structures.Positioning
+import ink.ui.structures.Sentiment
+
 /**
  * A button that can be pressed to invoke a particular action.
  */
 data class ButtonItem(
     override val span: Int = 1,
-    override val position: Position = Position.Default,
+    override val position: Positioning = Positioning.Start,
     val text: String,
     val action: Action,
     val latching: Boolean,
-    val indicator: Indicator,
+    val sentiment: Sentiment,
 ): DisplayItem

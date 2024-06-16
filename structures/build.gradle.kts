@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     kotlin("plugin.serialization")
     id("library")
-    id("com.inkapplications.publishing")
 }
 
 kotlin {
@@ -12,6 +11,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 api(libs.kotlinx.datetime)
+                api(libs.ink.ui.structures)
             }
         }
     }
