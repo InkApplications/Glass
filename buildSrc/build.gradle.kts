@@ -9,7 +9,10 @@ repositories {
 
 dependencies {
     implementation(libs.android.gradle)
+    implementation(libs.compose.gradle)
+    implementation(libs.compose.compiler)
     implementation(libs.kotlin.gradle)
+    implementation(libs.dokka)
+    implementation(libs.kotlinx.binary.compatibility)
     implementation(libs.kotlinx.serialization.gradle)
-    implementation(libs.ink.publishing)
 }

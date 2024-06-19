@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     kotlin("plugin.serialization")
     id("library")
+    id("published")
 }
 
 kotlin {
