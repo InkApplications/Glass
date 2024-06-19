@@ -14,10 +14,13 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.routing
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.json.Json
 import regolith.processes.daemon.Daemon
+import regolith.processes.daemon.DaemonRunAttempt
+import regolith.processes.daemon.FailureSignal
 
 /**
  * HTTP Server listening for display instructions.
@@ -69,5 +72,10 @@ class DisplayServer: Daemon {
             }
         }.start(wait = true)
         throw IllegalStateException("Server stopped unexpectedly")
+    }
+
+    override suspend fun onFailure(attempts: List<DaemonRunAttempt>): FailureSignal {
+        delay(1000)
+        return FailureSignal.Restart
     }
 }
