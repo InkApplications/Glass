@@ -6,13 +6,8 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        compilations.all {
-            compilerOptions.configure {
-                jvmTarget.set(JvmTarget.JVM_1_8)
-            }
-        }
-    }
+    jvmToolchain(11)
+    jvm()
 
     linuxX64()
     linuxArm64()
