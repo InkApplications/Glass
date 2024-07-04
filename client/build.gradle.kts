@@ -5,12 +5,18 @@ plugins {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(projects.structures)
-                implementation(libs.bundles.ktor.client)
-                implementation(libs.ktor.client.cio)
-            }
+        commonMain.dependencies {
+            api(projects.structures)
+            implementation(libs.iospin.libsodium)
+            implementation(libs.bundles.ktor.client)
+            implementation(libs.ktor.client.cio)
+            api(libs.ink.regolith.init)
+            api(libs.ink.regolith.data)
+            api(libs.kotlinx.datetime)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
     }
 }

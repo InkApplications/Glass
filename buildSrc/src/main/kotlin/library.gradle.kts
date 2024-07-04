@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     kotlin("multiplatform")
     id("maven-publish")
@@ -8,9 +6,6 @@ plugins {
 kotlin {
     jvmToolchain(11)
     jvm()
-
-    linuxX64()
-    linuxArm64()
 }
 
 

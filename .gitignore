@@ -6,3 +6,6 @@ local.properties
 # Android
 .cxx/
 *.keystore
+
+# Kotlin
+.kotlin/

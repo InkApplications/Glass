@@ -1,60 +1,59 @@
 package com.inkapplications.glassconsole
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import com.inkapplications.glassconsole.client.ActionClient
+import com.inkapplications.glassconsole.client.GlassClientModule
+import com.inkapplications.glassconsole.renderer.HashingPinPadRenderer
+import com.inkapplications.glassconsole.renderer.PinPadRenderer
 import com.inkapplications.glassconsole.server.DisplayServer
 import com.inkapplications.glassconsole.server.IpProvider
-import ink.ui.render.compose.ComposeRenderer
-import ink.ui.render.compose.theme.ColorVariant
-import ink.ui.render.compose.theme.ComposeRenderTheme
-import ink.ui.render.compose.theme.TypographyVariant
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import kimchi.Kimchi
+import kotlinx.datetime.Clock
+import kotlinx.serialization.json.Json
+import regolith.data.settings.AndroidSettingsModule
 import regolith.init.InitRunner
 import regolith.init.RegolithInitRunner
-import regolith.init.TargetManager
 import regolith.processes.daemon.DaemonInitializer
 
 /**
  * Object graph used application-wide.
  */
 class ApplicationModule(
-    private val application: DisplayApplication,
+    val application: DisplayApplication,
 ) {
+    private val clock = Clock.System
     val displayServer = DisplayServer()
+    private val settingsModule = AndroidSettingsModule(application)
+    val pskAccess = GlassClientModule.createPskAccess(
+        settingsAccess = settingsModule.settingsAccess,
+    )
+    val pskGenerator = GlassClientModule.createPskGenerator()
+    private val pinValidator = GlassClientModule.createPinValidator(clock)
+    private val hashingPinPadRenderer = HashingPinPadRenderer(
+        pinValidator = pinValidator,
+        pskAccess = pskAccess,
+    )
+    val renderers = listOf(PinPadRenderer, hashingPinPadRenderer)
+
     private val broadcaster = Broadcaster(displayServer, application, Kimchi)
     private val daemonInitializer = DaemonInitializer(
         daemons = listOf(displayServer, broadcaster),
     )
     private val regolith = RegolithInitRunner(
-        initializers = listOf(daemonInitializer),
+        initializers = listOf(
+            GlassClientModule.createInitializer(),
+            daemonInitializer
+        ),
     )
     val initRunner: InitRunner = regolith
-    val targetManager: TargetManager = regolith
 
-    val httpClient = HttpClient(OkHttp) {}
-    val actionClient = ActionClient(httpClient)
+    private val httpClient = HttpClient(OkHttp) {}
+    private val actionClient = ActionClient(httpClient)
 
     val layoutFactory = UiLayoutFactory(
         actionClient = actionClient,
-    )
-
-    val renderer = ComposeRenderer(
-        theme = ComposeRenderTheme(
-            colors = ColorVariant.Defaults.dark.copy(
-                background = Color.Black,
-            ),
-            typography = TypographyVariant().withFontFamily(
-                FontFamily(
-                    Font(R.font.roboto_mono_light, FontWeight.Normal),
-                    Font(R.font.roboto_mono_medium, FontWeight.Bold),
-                )
-            )
-        )
+        json = Json
     )
 
     val ipProvider = IpProvider(

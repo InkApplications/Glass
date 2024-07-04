@@ -1,9 +1,12 @@
 package com.inkapplications.glassconsole
 
 import com.inkapplications.glassconsole.client.ActionClient
+import com.inkapplications.glassconsole.elements.HashingPinPadElement
 import com.inkapplications.glassconsole.structures.*
+import ink.ui.structures.GroupingStyle
 import ink.ui.structures.Positioning
 import ink.ui.structures.Sentiment
+import ink.ui.structures.TextStyle
 import ink.ui.structures.elements.*
 import ink.ui.structures.layouts.CenteredElementLayout
 import ink.ui.structures.layouts.FixedGridLayout
@@ -11,9 +14,12 @@ import ink.ui.structures.layouts.UiLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class UiLayoutFactory(
     private val actionClient: ActionClient,
+    private val json: Json,
     private val actionScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) {
     fun forState(state: ScreenState): UiLayout {
@@ -64,6 +70,43 @@ class UiLayoutFactory(
                     )
                 }
             }
+            is ScreenState.ShowPsk -> CenteredElementLayout(
+                body = ElementList(
+                    items = listOf(
+                        TextElement(
+                            text = "New PSK",
+                            style = TextStyle.H1,
+                        ),
+                        EmptyElement,
+                        TextElement(
+                            text = state.psk.value,
+                            style = TextStyle.Body,
+                        ),
+                        ElementList(
+                            items = listOf(
+                                TextElement(
+                                    text = "Save this PSK to use the PIN functionality.",
+                                    style = TextStyle.Caption,
+                                ),
+                                TextElement(
+                                    text = "You will not be able to access it again.",
+                                    style = TextStyle.Caption,
+                                ),
+                            ),
+                            positioning = Positioning.Center,
+                            groupingStyle = GroupingStyle.Unified,
+                        ),
+                        ButtonElement(
+                            text = "Continue",
+                            onClick = {
+                                state.onDismiss()
+                            }
+                        )
+                    ),
+                    positioning = Positioning.Center,
+                    groupingStyle = GroupingStyle.Sections,
+                ),
+            )
         }
     }
 
@@ -79,7 +122,22 @@ class UiLayoutFactory(
                     }
                 },
             )
+            is PinPadItem -> HashingPinPadElement(
+                challengeNonce = challengeNonce,
+                witness = witness,
+                onSuccess = { response ->
+                    actionScope.launch {
+                        actionClient.sendAction(
+                            Action.Post(
+                                url = callbackUrl,
+                                body = json.encodeToString(response)
+                            )
+                        )
+                    }
+                }
+            )
             is StaticElementItem -> element
+            else -> TextElement("Unsupported Element")
         }
     }
 }

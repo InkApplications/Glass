@@ -6,9 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import ink.ui.render.compose.ComposeRenderer
+import ink.ui.render.compose.theme.ColorVariant
+import ink.ui.render.compose.theme.darken
+import ink.ui.render.compose.theme.defaultTheme
 
 /**
  * Main screen of the application, shows the display as configured after
@@ -30,7 +35,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             val state = viewModel.state.collectAsState()
             DisplayApplication.module.run {
-                renderer.render(layoutFactory.forState(state.value))
+                ComposeRenderer(
+                    theme = defaultTheme().copy(
+                        colors = ColorVariant.Defaults.dark.copy(
+                            background = Color.Black,
+                            surface = ColorVariant.Defaults.dark.surface.darken(.08f),
+                            surfaceInteraction = ColorVariant.Defaults.dark.surfaceInteraction.darken(.05f),
+                        )
+                    ),
+                    renderers = renderers,
+                ).render(layoutFactory.forState(state.value))
             }
         }
     }

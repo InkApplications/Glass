@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.inkapplications.glassconsole"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 34
         versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
         versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.bundles.compose)
 
     implementation(projects.structures)
+    implementation(projects.client)
     implementation(libs.bundles.regolith)
     implementation(libs.ink.ui.render.compose)
 

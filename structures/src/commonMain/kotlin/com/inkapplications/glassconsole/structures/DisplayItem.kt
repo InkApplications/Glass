@@ -1,9 +1,12 @@
 package com.inkapplications.glassconsole.structures
 
+import com.inkapplications.glassconsole.structures.pin.ChallengeResponse
+import com.inkapplications.glassconsole.structures.pin.Nonce
 import ink.ui.structures.Positioning
 import ink.ui.structures.Sentiment
 import ink.ui.structures.TextStyle
 import ink.ui.structures.elements.*
+import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -30,6 +33,12 @@ sealed interface DisplayItem: Spanable, Positionable {
         @Serializable(with = SentimentSerializer::class)
         val sentiment: Sentiment? = null,
         val progress: Float? = null,
+        val witness: String? = null,
+        val witnessNonce: Nonce? = null,
+        @Serializable(with = MillisecondsInstantSerializer::class)
+        val witnessTimestamp: Instant? = null,
+        val challengeNonce: Nonce? = null,
+        val callbackUrl: String? = null,
     )
 
     object Serializer: KSerializer<DisplayItem> {
@@ -123,6 +132,17 @@ sealed interface DisplayItem: Spanable, Positionable {
                     position = schema.position,
                     span = schema.span,
                 )
+                "pinpad" -> PinPadItem(
+                    challengeNonce = schema.challengeNonce!!,
+                    witness = ChallengeResponse(
+                        nonce = schema.witnessNonce!!,
+                        timestamp = schema.witnessTimestamp!!,
+                        digest = schema.witness!!,
+                    ),
+                    callbackUrl = schema.callbackUrl!!,
+                    position = schema.position,
+                    span = schema.span,
+                )
                 else -> throw IllegalArgumentException("Unknown type: ${schema.type}")
             }
         }
@@ -171,6 +191,16 @@ sealed interface DisplayItem: Spanable, Positionable {
                     action = value.action,
                     latching = value.latching,
                     sentiment = value.sentiment,
+                    span = value.span,
+                    position = value.position,
+                )
+                is PinPadItem -> JsonSchema(
+                    type = "pinpad",
+                    challengeNonce = value.challengeNonce,
+                    witness = value.witness.digest,
+                    witnessNonce = value.witness.nonce,
+                    witnessTimestamp = value.witness.timestamp,
+                    callbackUrl = value.callbackUrl,
                     span = value.span,
                     position = value.position,
                 )

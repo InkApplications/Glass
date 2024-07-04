@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Serializes a duration as a whole number of seconds.
  */
-internal object SecondsDurationSerializer: KSerializer<Duration> {
+internal class SecondsDurationSerializer: KSerializer<Duration> {
     private val delegate = Long.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 

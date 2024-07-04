@@ -6,10 +6,10 @@ lifecycle-runtime-ktx = "2.8.2"
 activity-compose = "1.7.0"
 compose-bom = "2024.06.00"
 regolith = "1.6.0"
-ink-ui = "0.3.3"
+ink-ui = "0.4.8"
 
 [libraries.android-gradle]
-version = "8.5.0"
+version = "8.2.0"
 module = "com.android.tools.build:gradle"
 
 [libraries.kotlin-gradle]
@@ -59,6 +59,10 @@ module = "com.inkapplications.regolith:processes"
 [libraries.ink-regolith-resources]
 version.ref = "regolith"
 module = "com.inkapplications.regolith:resources"
+
+[libraries.ink-regolith-data]
+version.ref = "regolith"
+module = "com.inkapplications.regolith:data"
 
 [libraries.core-ktx]
 version.ref = "core-ktx"
@@ -134,11 +138,15 @@ module = "com.inkapplications.ui:structures"
 
 [libraries.ink-ui-render-compose]
 version.ref = "ink-ui"
-module = "com.inkapplications.ui:render-compose"
+module = "com.inkapplications.ui:render-compose-android"
+
+[libraries.iospin-libsodium]
+version = "0.9.2"
+module = "com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings"
 
 [bundles]
 androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]
 compose = ["compose-ui", "compose-ui-graphics", "compose-foundation"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-content-negotiation", "ktor-serialization-kotlinx-json"]
 ktor-client = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
-regolith = ["ink-regolith-init", "ink-regolith-processes", "ink-regolith-resources"]
+regolith = ["ink-regolith-init", "ink-regolith-processes", "ink-regolith-resources", "ink-regolith-data"]
