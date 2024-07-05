@@ -72,6 +72,8 @@ jobs:
         name: Draft Github Release
         needs: [android-publish]
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             -
                 name: Create Release
