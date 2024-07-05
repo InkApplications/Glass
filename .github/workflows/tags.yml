@@ -37,7 +37,7 @@ jobs:
                     ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
                     ORG_GRADLE_PROJECT_signingAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
                 name: Build Android App
-                run: ./gradlew --no-daemon assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT))
+                run: ./gradlew --no-daemon assembleRelease bundleRelease -Pcommit=${{ github.sha }} -PversionName=${{ github.ref_name }} -PversionCode=$((($GITHUB_RUN_NUMBER * 10) + $GITHUB_RUN_ATTEMPT + 211))
             -
                 name: Build Client Publication
                 run: ./gradlew --no-daemon client:build -Pversion=${GITHUB_TAG/refs\/tags\//}
