@@ -1,9 +1,18 @@
 plugins {
-    id("library")
+    kotlin("multiplatform")
     id("published")
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
+    jvmToolchain(11)
+    jvm()
+
+    macosX64()
+    macosArm64()
+    iosSimulatorArm64()
+    iosX64()
+
     sourceSets {
         commonMain.dependencies {
             api(projects.structures)

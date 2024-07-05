@@ -1,6 +1,6 @@
 plugins {
     kotlin("plugin.serialization")
-    id("library")
+    id("multiplatform.tier3")
     id("published")
 }
 
