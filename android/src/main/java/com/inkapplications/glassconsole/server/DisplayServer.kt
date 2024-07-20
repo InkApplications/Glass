@@ -14,6 +14,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.routing
+import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,7 +26,9 @@ import regolith.processes.daemon.FailureSignal
 /**
  * HTTP Server listening for display instructions.
  */
-class DisplayServer: Daemon {
+class DisplayServer(
+    private val logger: KimchiLogger,
+): Daemon {
     private val currentConfig = MutableSharedFlow<DisplayConfig?>()
     private val mutableBroadcasts = MutableSharedFlow<Broadcast>()
 
@@ -52,7 +55,7 @@ class DisplayServer: Daemon {
                     val config = try {
                         call.receive<DisplayConfig>()
                     } catch (e: Exception) {
-                        android.util.Log.e("Server", "Error Receiving Request", e)
+                        logger.error("Error Receiving Request", e)
                         throw e
                     }
                     currentConfig.emit(config)
@@ -62,7 +65,7 @@ class DisplayServer: Daemon {
                     val broadcast = try {
                         call.receive<Broadcast>()
                     } catch (e: Exception) {
-                        android.util.Log.e("Server", "Error Receiving Request", e)
+                        logger.error("Error Receiving Request", e)
                         throw e
                     }
 

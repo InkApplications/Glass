@@ -9,10 +9,14 @@ import com.inkapplications.glassconsole.server.IpProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import kimchi.Kimchi
+import kimchi.logger.LogLevel
+import kimchi.logger.defaultWriter
+import kimchi.logger.withThreshold
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 import regolith.data.settings.AndroidSettingsModule
 import regolith.init.InitRunner
+import regolith.init.Initializer
 import regolith.init.RegolithInitRunner
 import regolith.processes.daemon.DaemonInitializer
 
@@ -23,7 +27,14 @@ class ApplicationModule(
     application: DisplayApplication,
 ) {
     private val clock = Clock.System
-    val displayServer = DisplayServer()
+    val logger = Kimchi.apply {
+        addLog(
+            if (BuildConfig.DEBUG) defaultWriter
+            else defaultWriter.withThreshold(LogLevel.INFO)
+        )
+    }
+    val displayServer = DisplayServer(logger)
+    private val kimchiRegolithAdapter = KimchiRegolithAdapter(logger)
     private val settingsModule = AndroidSettingsModule(application)
     val pskAccess = GlassClientModule.createPskAccess(
         settingsAccess = settingsModule.settingsAccess,
@@ -36,11 +47,13 @@ class ApplicationModule(
     )
     val renderers = listOf(PinPadRenderer, hashingPinPadRenderer)
 
-    private val broadcaster = Broadcaster(displayServer, application, Kimchi)
+    private val broadcaster = Broadcaster(displayServer, application, logger)
     private val daemonInitializer = DaemonInitializer(
+        callbacks = kimchiRegolithAdapter,
         daemons = listOf(displayServer, broadcaster),
     )
     private val regolith = RegolithInitRunner(
+        callbacks = kimchiRegolithAdapter,
         initializers = listOf(
             GlassClientModule.createInitializer(),
             daemonInitializer
@@ -49,7 +62,7 @@ class ApplicationModule(
     val initRunner: InitRunner = regolith
 
     private val httpClient = HttpClient(OkHttp) {}
-    private val actionClient = ActionClient(httpClient)
+    private val actionClient = ActionClient(httpClient, logger)
 
     val layoutFactory = UiLayoutFactory(
         actionClient = actionClient,
