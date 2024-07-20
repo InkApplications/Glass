@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.inkapplications.glassconsole"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
         versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
         versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
@@ -51,6 +51,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -68,6 +69,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.android.desugaring)
     implementation(libs.bundles.androidx)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)

@@ -144,6 +144,10 @@ module = "com.inkapplications.ui:render-compose-android"
 version = "0.9.2"
 module = "com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings"
 
+[libraries.android-desugaring]
+version = "2.0.4"
+module = "com.android.tools:desugar_jdk_libs"
+
 [bundles]
 androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]
 compose = ["compose-ui", "compose-ui-graphics", "compose-foundation"]

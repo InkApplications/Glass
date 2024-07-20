@@ -20,7 +20,7 @@ import regolith.processes.daemon.DaemonInitializer
  * Object graph used application-wide.
  */
 class ApplicationModule(
-    val application: DisplayApplication,
+    application: DisplayApplication,
 ) {
     private val clock = Clock.System
     val displayServer = DisplayServer()
