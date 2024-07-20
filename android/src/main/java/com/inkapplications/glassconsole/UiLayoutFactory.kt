@@ -121,6 +121,8 @@ class UiLayoutFactory(
                         actionClient.sendAction(action)
                     }
                 },
+                leadingSymbol = leadingSymbol,
+                trailingSymbol = trailingSymbol,
             )
             is PinPadItem -> HashingPinPadElement(
                 challengeNonce = challengeNonce,

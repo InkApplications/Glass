@@ -4,6 +4,7 @@ import com.inkapplications.glassconsole.structures.pin.ChallengeResponse
 import com.inkapplications.glassconsole.structures.pin.Nonce
 import ink.ui.structures.Positioning
 import ink.ui.structures.Sentiment
+import ink.ui.structures.Symbol
 import ink.ui.structures.TextStyle
 import ink.ui.structures.elements.*
 import kotlinx.datetime.Instant
@@ -39,6 +40,10 @@ sealed interface DisplayItem: Spanable, Positionable {
         val witnessTimestamp: Instant? = null,
         val challengeNonce: Nonce? = null,
         val callbackUrl: String? = null,
+        @Serializable(with = SymbolSerializer::class)
+        val leadingSymbol: Symbol? = null,
+        @Serializable(with = SymbolSerializer::class)
+        val trailingSymbol: Symbol? = null,
     )
 
     object Serializer: KSerializer<DisplayItem> {
@@ -131,6 +136,8 @@ sealed interface DisplayItem: Spanable, Positionable {
                     sentiment = schema.sentiment.orDefault(),
                     position = schema.position,
                     span = schema.span,
+                    leadingSymbol = schema.leadingSymbol,
+                    trailingSymbol = schema.trailingSymbol,
                 )
                 "pinpad" -> PinPadItem(
                     challengeNonce = schema.challengeNonce!!,
@@ -193,6 +200,8 @@ sealed interface DisplayItem: Spanable, Positionable {
                     sentiment = value.sentiment,
                     span = value.span,
                     position = value.position,
+                    leadingSymbol = value.leadingSymbol,
+                    trailingSymbol = value.trailingSymbol,
                 )
                 is PinPadItem -> JsonSchema(
                     type = "pinpad",
