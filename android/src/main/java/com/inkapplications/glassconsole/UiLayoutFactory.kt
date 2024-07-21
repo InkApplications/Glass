@@ -22,7 +22,7 @@ class UiLayoutFactory(
     private val json: Json,
     private val actionScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) {
-    fun forState(state: ScreenState): UiLayout {
+    fun forState(state: ScreenState, overrideBacklight: Boolean): UiLayout {
         return when (state) {
             ScreenState.Initial -> CenteredElementLayout(
                 body = ThrobberElement(
@@ -47,27 +47,31 @@ class UiLayoutFactory(
                     positioning = Positioning.Center,
                 ),
             )
-            is ScreenState.Configured -> when (val layout = state.config.layout) {
-                is LayoutType.VerticalGrid -> {
-                    val headings = FixedGridLayout.GridItem(
-                        span = layout.columns,
-                        horizontalPositioning = Positioning.Center,
-                        body = StatusIndicatorElement(
-                            text = "Not Connected",
-                            sentiment = Sentiment.Caution,
-                        )
-                    ).takeIf { !state.connected }.let(::listOf).filterNotNull()
-                    val gridItems = state.config.items.map { item ->
-                        FixedGridLayout.GridItem(
-                            span = item.span,
-                            body = item.toUiElement(),
-                            horizontalPositioning = item.position,
+            is ScreenState.Configured -> {
+                if (!overrideBacklight && state.config.backlight is BacklightConfig.Off) {
+                    CenteredElementLayout(EmptyElement)
+                } else when (val layout = state.config.layout) {
+                    is LayoutType.VerticalGrid -> {
+                        val headings = FixedGridLayout.GridItem(
+                            span = layout.columns,
+                            horizontalPositioning = Positioning.Center,
+                            body = StatusIndicatorElement(
+                                text = "Not Connected",
+                                sentiment = Sentiment.Caution,
+                            )
+                        ).takeIf { !state.connected }.let(::listOf).filterNotNull()
+                        val gridItems = state.config.items.map { item ->
+                            FixedGridLayout.GridItem(
+                                span = item.span,
+                                body = item.toUiElement(),
+                                horizontalPositioning = item.position,
+                            )
+                        }
+                        FixedGridLayout(
+                            columns = layout.columns,
+                            items = headings + gridItems,
                         )
                     }
-                    FixedGridLayout(
-                        columns = layout.columns,
-                        items = headings + gridItems,
-                    )
                 }
             }
             is ScreenState.ShowPsk -> CenteredElementLayout(

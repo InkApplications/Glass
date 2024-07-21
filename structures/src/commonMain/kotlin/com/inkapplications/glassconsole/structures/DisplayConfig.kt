@@ -1,5 +1,6 @@
 package com.inkapplications.glassconsole.structures
 
+import com.inkapplications.glassconsole.structures.BacklightConfig.Auto
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
 
@@ -26,4 +27,9 @@ data class DisplayConfig(
      */
     @Serializable(with = SecondsDurationSerializer::class)
     val expiration: Duration? = null,
+
+    /**
+     * Backlight configuration for the display.
+     */
+    val backlight: BacklightConfig = Auto,
 )

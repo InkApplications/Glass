@@ -11,6 +11,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 api(libs.kotlinx.datetime)
                 api(libs.ink.ui.structures)
+                api(libs.ink.spondee)
             }
         }
     }

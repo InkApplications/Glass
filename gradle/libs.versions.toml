@@ -136,6 +136,10 @@ module = "io.ktor:ktor-client-content-negotiation"
 version.ref = "ink-ui"
 module = "com.inkapplications.ui:structures"
 
+[libraries.ink-spondee]
+version = "1.5.0"
+module = "com.inkapplications.spondee:units"
+
 [libraries.ink-ui-render-compose]
 version.ref = "ink-ui"
 module = "com.inkapplications.ui:render-compose-android"
