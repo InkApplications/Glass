@@ -9,16 +9,16 @@ import androidx.compose.ui.unit.dp
 import com.inkapplications.glassconsole.elements.PinPadElement
 import ink.ui.render.compose.elements.Button
 import ink.ui.render.compose.renderer.ElementRenderer
-import ink.ui.render.compose.renderer.RenderResult
 import ink.ui.render.compose.theme.ComposeRenderTheme
 import ink.ui.structures.Sentiment
 import ink.ui.structures.Symbol
 import ink.ui.structures.elements.UiElement
+import ink.ui.structures.render.RenderResult
 
 object PinPadRenderer: ElementRenderer {
     @Composable
     override fun render(element: UiElement, theme: ComposeRenderTheme, parent: ElementRenderer): RenderResult {
-        if (element !is PinPadElement) return RenderResult.NotRendered
+        if (element !is PinPadElement) return RenderResult.Skipped
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

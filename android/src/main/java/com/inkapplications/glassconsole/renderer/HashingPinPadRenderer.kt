@@ -11,11 +11,11 @@ import com.inkapplications.glassconsole.elements.PinPadElement
 import com.inkapplications.glassconsole.sound
 import com.inkapplications.glassconsole.structures.pin.Pin
 import ink.ui.render.compose.renderer.ElementRenderer
-import ink.ui.render.compose.renderer.RenderResult
 import ink.ui.render.compose.theme.ComposeRenderTheme
 import ink.ui.structures.Sentiment
 import ink.ui.structures.elements.ThrobberElement
 import ink.ui.structures.elements.UiElement
+import ink.ui.structures.render.RenderResult
 import kotlinx.coroutines.launch
 
 class HashingPinPadRenderer(
@@ -24,7 +24,7 @@ class HashingPinPadRenderer(
 ): ElementRenderer {
     @Composable
     override fun render(element: UiElement, theme: ComposeRenderTheme, parent: ElementRenderer): RenderResult {
-        if (element !is HashingPinPadElement) return RenderResult.NotRendered
+        if (element !is HashingPinPadElement) return RenderResult.Skipped
 
         val soundScope = rememberCoroutineScope()
         val context = LocalContext.current
