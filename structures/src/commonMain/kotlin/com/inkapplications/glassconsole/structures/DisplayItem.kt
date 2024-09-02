@@ -46,6 +46,9 @@ sealed interface DisplayItem: Spanable, Positionable {
         val trailingSymbol: Symbol? = null,
         @Serializable(with = SymbolSerializer::class)
         val symbol: Symbol? = null,
+        val temperature: String? = null,
+        val condition: WeatherElement.Condition? = null,
+        val secondaryTemperature: String? = null,
     )
 
     object Serializer: KSerializer<DisplayItem> {
@@ -139,6 +142,16 @@ sealed interface DisplayItem: Spanable, Positionable {
                     position = schema.position,
                     span = schema.span,
                 )
+                "weather" -> StaticElementItem(
+                    element = WeatherElement(
+                        temperature = schema.temperature!!,
+                        condition = schema.condition!!,
+                        title = schema.text,
+                        secondaryTemperature = schema.secondaryTemperature,
+                    ),
+                    position = schema.position,
+                    span = schema.span,
+                )
                 "button" -> ButtonItem(
                     text = schema.text!!,
                     action = schema.action!!,
@@ -180,6 +193,7 @@ sealed interface DisplayItem: Spanable, Positionable {
                         is ProgressElement -> "progress"
                         is EmptyElement -> "spacer"
                         is IconElement -> "icon"
+                        is WeatherElement -> "weather"
                         else -> throw IllegalArgumentException("Unsupported element type: ${value.element::class}")
                     },
                     span = value.span,
@@ -190,6 +204,7 @@ sealed interface DisplayItem: Spanable, Positionable {
                         is ThrobberElement -> value.element.caption
                         is ProgressElement -> value.element.caption
                         is EmptyElement -> null
+                        is WeatherElement -> value.element.title
                         else -> null
                     },
                     sentiment = when (value.element) {
@@ -204,6 +219,18 @@ sealed interface DisplayItem: Spanable, Positionable {
                     },
                     progress = when (value.element) {
                         is ProgressElement.Determinate -> value.element.progress
+                        else -> null
+                    },
+                    temperature = when (value.element) {
+                        is WeatherElement -> value.element.temperature
+                        else -> null
+                    },
+                    condition = when (value.element) {
+                        is WeatherElement -> value.element.condition
+                        else -> null
+                    },
+                    secondaryTemperature = when (value.element) {
+                        is WeatherElement -> value.element.secondaryTemperature
                         else -> null
                     },
                 )
