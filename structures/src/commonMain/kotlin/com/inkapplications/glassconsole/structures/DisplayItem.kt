@@ -48,7 +48,8 @@ sealed interface DisplayItem: Spanable, Positionable {
         val symbol: Symbol? = null,
         val temperature: String? = null,
         val condition: WeatherElement.Condition? = null,
-        val secondaryTemperature: String? = null,
+        val secondaryText: String? = null,
+        val daytime: Boolean? = null,
     )
 
     object Serializer: KSerializer<DisplayItem> {
@@ -147,7 +148,9 @@ sealed interface DisplayItem: Spanable, Positionable {
                         temperature = schema.temperature!!,
                         condition = schema.condition!!,
                         title = schema.text,
-                        secondaryTemperature = schema.secondaryTemperature,
+                        daytime = schema.daytime ?: false,
+                        sentiment = schema.sentiment.orDefault(),
+                        secondaryText = schema.secondaryText,
                     ),
                     position = schema.position,
                     span = schema.span,
@@ -211,6 +214,7 @@ sealed interface DisplayItem: Spanable, Positionable {
                         is StatusIndicatorElement -> value.element.sentiment
                         is ThrobberElement -> value.element.sentiment
                         is ProgressElement -> value.element.sentiment
+                        is WeatherElement -> value.element.sentiment
                         else -> Sentiment.Nominal
                     },
                     symbol = when (value.element) {
@@ -229,8 +233,12 @@ sealed interface DisplayItem: Spanable, Positionable {
                         is WeatherElement -> value.element.condition
                         else -> null
                     },
-                    secondaryTemperature = when (value.element) {
-                        is WeatherElement -> value.element.secondaryTemperature
+                    secondaryText = when (value.element) {
+                        is WeatherElement -> value.element.secondaryText
+                        else -> null
+                    },
+                    daytime = when (value.element) {
+                        is WeatherElement -> value.element.daytime
                         else -> null
                     },
                 )

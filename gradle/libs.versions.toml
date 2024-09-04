@@ -6,7 +6,7 @@ lifecycle-runtime-ktx = "2.8.2"
 activity-compose = "1.7.0"
 compose-bom = "2024.06.00"
 regolith = "1.6.0"
-ink-ui = "0.5.0"
+ink-ui = "0.6.0"
 
 [libraries.android-gradle]
 version = "8.2.0"
