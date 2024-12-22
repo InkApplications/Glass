@@ -4,12 +4,18 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val dokkaGenerate by tasks.getting
+
+dokka {
+    dokkaPublications.html {
+        outputDirectory.set(layout.buildDirectory.dir("dokkaOutput"))
+    }
+}
 
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
+    dependsOn(dokkaGenerate)
     archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
+    from(layout.buildDirectory.dir("dokkaOutput"))
 }
 
 publishing {
