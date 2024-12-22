@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.inkapplications.glassconsole"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.inkapplications.glassconsole"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
         versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
         buildConfigField("String", "COMMIT", project.properties.getOrDefault("commit", null)?.let { "\"$it\"" } ?: "null")
