@@ -4,12 +4,12 @@ on:
 name: Release
 jobs:
     tests:
-        uses: inkapplications/.github/.github/workflows/kmp-checks.yml@1.1.0
+        uses: inkapplications/.github/.github/workflows/kmp-checks.yml@1.2.0
     sdk-publish:
         name: Publish to Maven Central
         needs: [tests]
         secrets: inherit
-        uses: inkapplications/.github/.github/workflows/kmp-maven-publish.yml@1.1.0
+        uses: inkapplications/.github/.github/workflows/kmp-maven-publish.yml@1.2.0
         with:
             version: ${{ github.ref_name }}
             draft-release: false
