@@ -65,6 +65,7 @@ class UiLayoutFactory(
                                 span = item.span,
                                 body = item.toUiElement(),
                                 horizontalPositioning = item.position,
+                                verticalPositioning = item.position,
                             )
                         }
                         FixedGridLayout(
