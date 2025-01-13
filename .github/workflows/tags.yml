@@ -47,13 +47,13 @@ jobs:
                     cp android/build/outputs/bundle/release/android-release.aab build/output/GlassConsole-${{ github.ref_name }}.aab
             -
                 name: Archive APK
-                uses: actions/upload-artifact@v4.5.0
+                uses: actions/upload-artifact@v4.6.0
                 with:
                     name: Android-APK
                     path: build/output/GlassConsole-${{ github.ref_name }}.apk
             -
                 name: Archive Bundle
-                uses: actions/upload-artifact@v4.5.0
+                uses: actions/upload-artifact@v4.6.0
                 with:
                     name: Android-AAB
                     path: build/output/GlassConsole-${{ github.ref_name }}.aab
