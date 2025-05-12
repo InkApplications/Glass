@@ -2,7 +2,7 @@
 kotlin = "2.1.20"
 ktor = "3.0.3"
 core-ktx = "1.15.0"
-lifecycle-runtime-ktx = "2.8.7"
+lifecycle-runtime-ktx = "2.9.0"
 activity-compose = "1.10.1"
 compose-bom = "2024.12.01"
 regolith = "1.6.0"
