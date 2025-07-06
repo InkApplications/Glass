@@ -3,7 +3,7 @@ package com.inkapplications.glassconsole
 import android.app.Application
 import android.speech.tts.TextToSpeech
 import com.inkapplications.glassconsole.android.playNotificationSound
-import com.inkapplications.glassconsole.server.DisplayServer
+import com.inkapplications.glassconsole.server.ConfigServer
 import com.inkapplications.glassconsole.structures.Broadcast
 import kimchi.logger.KimchiLogger
 import kotlinx.coroutines.flow.collectLatest
@@ -11,7 +11,7 @@ import regolith.processes.daemon.Daemon
 import java.util.Locale
 
 class Broadcaster(
-    private val displayServer: DisplayServer,
+    private val configServer: ConfigServer,
     private val application: Application,
     private val logger: KimchiLogger,
 ): TextToSpeech.OnInitListener, Daemon {
@@ -34,7 +34,7 @@ class Broadcaster(
 
     override suspend fun startDaemon(): Nothing {
         tts = TextToSpeech(application, this)
-        displayServer.broadcasts.collectLatest(::onBroadcast)
+        configServer.broadcasts.collectLatest(::onBroadcast)
         throw IllegalStateException("Broadcasts completed unexpectedly.")
     }
 

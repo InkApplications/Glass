@@ -6,7 +6,7 @@ lifecycle-runtime-ktx = "2.8.7"
 activity-compose = "1.10.1"
 compose-bom = "2024.12.01"
 regolith = "1.6.0"
-ink-ui = "1.1.0"
+ink-ui = "1.4.0"
 
 [libraries.android-gradle]
 version = "8.7.3"
@@ -143,6 +143,10 @@ module = "com.inkapplications.spondee:units"
 [libraries.ink-ui-render-compose]
 version.ref = "ink-ui"
 module = "com.inkapplications.ui:render-compose-android"
+
+[libraries.ink-ui-render-remote]
+version.ref = "ink-ui"
+module = "com.inkapplications.ui:render-remote"
 
 [libraries.iospin-libsodium]
 version = "0.9.2"

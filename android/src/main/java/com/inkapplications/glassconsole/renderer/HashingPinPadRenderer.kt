@@ -1,13 +1,12 @@
 package com.inkapplications.glassconsole.renderer
 
-import android.media.AudioManager
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.inkapplications.glassconsole.android.playNotificationSound
 import com.inkapplications.glassconsole.client.pin.PinValidator
 import com.inkapplications.glassconsole.client.pin.PskAccess
-import com.inkapplications.glassconsole.elements.HashingPinPadElement
-import com.inkapplications.glassconsole.elements.PinPadElement
+import com.inkapplications.glassconsole.structures.pin.HashingPinPadElement
+import com.inkapplications.glassconsole.structures.pin.PinPadElement
 import com.inkapplications.glassconsole.sound
 import com.inkapplications.glassconsole.structures.pin.Pin
 import ink.ui.render.compose.renderer.ElementRenderer

@@ -10,16 +10,6 @@ import kotlin.time.Duration
 @Serializable
 data class DisplayConfig(
     /**
-     * A list of UI elements to be displayed.
-     */
-    val items: List<DisplayItem>,
-
-    /**
-     * The layout to use for the display.
-     */
-    val layout: LayoutType = LayoutType.VerticalGrid(1),
-
-    /**
      * An amount of time to display the UI before it is removed.
      *
      * This is used to help prevent a stale UI from being displayed if

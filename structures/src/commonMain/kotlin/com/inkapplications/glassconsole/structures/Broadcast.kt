@@ -24,7 +24,6 @@ sealed interface Broadcast {
     @Serializable
     private data class Schema(
         val type: String,
-        @Serializable(with = SentimentSerializer::class)
         val sentiment: Sentiment? = null,
         val text: String? = null,
     )

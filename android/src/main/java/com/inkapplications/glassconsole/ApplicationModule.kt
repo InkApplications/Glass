@@ -1,24 +1,25 @@
 package com.inkapplications.glassconsole
 
-import com.inkapplications.glassconsole.client.ActionClient
+import com.inkapplications.glassconsole.ApplicationModule.Config.CONFIG_SERVER_PORT
 import com.inkapplications.glassconsole.client.GlassClientModule
 import com.inkapplications.glassconsole.renderer.HashingPinPadRenderer
 import com.inkapplications.glassconsole.renderer.PinPadRenderer
-import com.inkapplications.glassconsole.server.DisplayServer
+import com.inkapplications.glassconsole.renderer.WeatherRenderer
+import com.inkapplications.glassconsole.server.ConfigServer
 import com.inkapplications.glassconsole.server.IpProvider
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
+import com.inkapplications.glassconsole.structures.elements.WeatherElement
+import com.inkapplications.glassconsole.structures.pin.EnterHashedPinEvent
+import com.inkapplications.glassconsole.structures.pin.HashingPinPadElement
+import com.inkapplications.glassconsole.structures.pin.HashingPinPadElementSerializer
+import ink.ui.render.compose.ComposePresenter
+import ink.ui.render.remote.RemoteRenderModule
 import kimchi.Kimchi
 import kimchi.logger.LogLevel
 import kimchi.logger.defaultWriter
 import kimchi.logger.withThreshold
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
-import kotlinx.serialization.json.Json
 import regolith.data.settings.AndroidSettingsModule
 import regolith.init.InitRunner
-import regolith.init.Initializer
 import regolith.init.RegolithInitRunner
 import regolith.processes.daemon.DaemonInitializer
 
@@ -28,14 +29,19 @@ import regolith.processes.daemon.DaemonInitializer
 class ApplicationModule(
     application: DisplayApplication,
 ) {
+    object Config
+    {
+        val DISPLAY_SERVER_PORT = 8081
+        val CONFIG_SERVER_PORT = 8082
+    }
     private val clock = Clock.System
-    val logger = Kimchi.apply {
+    private val logger = Kimchi.apply {
         addLog(
             if (BuildConfig.DEBUG) defaultWriter
             else defaultWriter.withThreshold(LogLevel.INFO)
         )
     }
-    val displayServer = DisplayServer(logger)
+    val configServer = ConfigServer(logger, CONFIG_SERVER_PORT)
     private val kimchiRegolithAdapter = KimchiRegolithAdapter(logger)
     private val settingsModule = AndroidSettingsModule(application)
     val pskAccess = GlassClientModule.createPskAccess(
@@ -47,12 +53,12 @@ class ApplicationModule(
         pinValidator = pinValidator,
         pskAccess = pskAccess,
     )
-    val renderers = listOf(PinPadRenderer, hashingPinPadRenderer)
+    val renderers = listOf(PinPadRenderer, hashingPinPadRenderer, WeatherRenderer)
 
-    private val broadcaster = Broadcaster(displayServer, application, logger)
+    private val broadcaster = Broadcaster(configServer, application, logger)
     private val daemonInitializer = DaemonInitializer(
         callbacks = kimchiRegolithAdapter,
-        daemons = listOf(displayServer, broadcaster),
+        daemons = listOf(configServer, broadcaster),
     )
     private val regolith = RegolithInitRunner(
         callbacks = kimchiRegolithAdapter,
@@ -62,14 +68,21 @@ class ApplicationModule(
         ),
     )
     val initRunner: InitRunner = regolith
-
-    private val httpClient = HttpClient(OkHttp) {}
-    private val actionClient = ActionClient(httpClient, logger)
-
-    val layoutFactory = UiLayoutFactory(
-        actionClient = actionClient,
-        json = Json
+    val remoteRenderModule = RemoteRenderModule(
+        serializationConfig = {
+            addElementSerializer(HashingPinPadElement::class, HashingPinPadElementSerializer(uiEvents))
+            addEventSerializer(EnterHashedPinEvent::class, EnterHashedPinEvent.serializer(), EnterHashedPinEvent.Listeners.PinListener)
+            addElementSerializer(WeatherElement::class, WeatherElement.serializer())
+        }
     )
+    val serverUiPresenter = ComposePresenter(
+        renderers = renderers,
+    )
+    val localUiPresenter = ComposePresenter(
+        renderers = renderers,
+    )
+
+    val layoutFactory = UiLayoutFactory()
 
     val ipProvider = IpProvider(
         connectivityManager = application.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager,

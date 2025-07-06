@@ -6,13 +6,12 @@ plugins {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.serialization.json)
-                api(libs.kotlinx.datetime)
-                api(libs.ink.ui.structures)
-                api(libs.ink.spondee)
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+            api(libs.kotlinx.datetime)
+            api(libs.ink.ui.structures)
+            api(libs.ink.ui.render.remote)
+            api(libs.ink.spondee)
         }
     }
 }
