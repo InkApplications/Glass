@@ -4,7 +4,6 @@ import com.inkapplications.glassconsole.structures.Broadcast
 import com.inkapplications.glassconsole.structures.DisplayConfig
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
@@ -26,8 +25,9 @@ import regolith.processes.daemon.FailureSignal
 /**
  * HTTP Server listening for display instructions.
  */
-class DisplayServer(
+class ConfigServer(
     private val logger: KimchiLogger,
+    private val port: Int,
 ): Daemon {
     private val currentConfig = MutableSharedFlow<DisplayConfig?>()
     private val mutableBroadcasts = MutableSharedFlow<Broadcast>()
@@ -43,7 +43,7 @@ class DisplayServer(
     val broadcasts: SharedFlow<Broadcast> = mutableBroadcasts
 
     override suspend fun startDaemon(): Nothing {
-        embeddedServer(CIO, port = 8080) {
+        embeddedServer(CIO, port = port) {
             install(ContentNegotiation) {
                 json(Json {
                     prettyPrint = true
@@ -51,7 +51,7 @@ class DisplayServer(
                 })
             }
             routing {
-                put("/update") {
+                put("/config") {
                     val config = try {
                         call.receive<DisplayConfig>()
                     } catch (e: Exception) {

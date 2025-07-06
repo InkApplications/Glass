@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.inkapplications.glassconsole.elements.PinPadElement
+import com.inkapplications.glassconsole.structures.pin.PinPadElement
 import ink.ui.render.compose.elements.Button
 import ink.ui.render.compose.renderer.ElementRenderer
 import ink.ui.render.compose.theme.ComposeRenderTheme

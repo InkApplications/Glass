@@ -17,6 +17,11 @@ sealed interface ScreenState {
      */
     object NoConnection: ScreenState
 
+    interface Connected: ScreenState
+    {
+        val ips: List<String>
+    }
+
     /**
      * Set-up screen to display the saved PSK on the device.
      *
@@ -31,8 +36,8 @@ sealed interface ScreenState {
      * Screen state shown when the device is listening for a connection.
      */
     data class NoData(
-        val ips: String,
-    ): ScreenState
+        override val ips: List<String>,
+    ): Connected
 
     /**
      * State used when the application has received a configuration.
@@ -41,6 +46,6 @@ sealed interface ScreenState {
      */
     data class Configured(
         val config: DisplayConfig,
-        val connected: Boolean,
-    ): ScreenState
+        override val ips: List<String>,
+    ): Connected
 }

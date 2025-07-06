@@ -78,6 +78,7 @@ dependencies {
     implementation(projects.client)
     implementation(libs.bundles.regolith)
     implementation(libs.ink.ui.render.compose)
+    implementation(libs.ink.ui.render.remote)
 
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)

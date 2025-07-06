@@ -14,7 +14,7 @@ interface GlassHttpClient {
      * @param host The IP or hostname of the device to be configured
      * @param port The port that the display server is running on for the display device (default: 8080)
      */
-    suspend fun updateDisplay(
+    suspend fun setConfig(
         config: DisplayConfig,
         host: String,
         port: Int = 8080,

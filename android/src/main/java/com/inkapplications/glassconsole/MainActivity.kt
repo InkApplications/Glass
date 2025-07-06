@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,14 +22,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.inkapplications.glassconsole.ApplicationModule.Config.DISPLAY_SERVER_PORT
 import com.inkapplications.glassconsole.structures.BacklightConfig
-import ink.ui.render.compose.ComposeRenderer
+import ink.ui.render.compose.bindAndPresent
 import ink.ui.render.compose.theme.ColorVariant
 import ink.ui.render.compose.theme.darken
 import ink.ui.render.compose.theme.defaultTheme
+import ink.ui.structures.render.onUpdate
 import inkapplications.spondee.structure.toFloat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -36,7 +41,7 @@ import kotlin.time.Duration.Companion.seconds
  * start-up.
  */
 class MainActivity : ComponentActivity() {
-    private val viewModel: DisplayViewModel by viewModels()
+    private val viewModel: ConfigDisplayModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,29 +55,60 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val state = viewModel.state.collectAsState()
-            val screenConfig = (state.value as? ScreenState.Configured)?.config?.backlight
+            val backlightConfig = (state.value as? ScreenState.Configured)?.config?.backlight
             val overrideBacklight = remember { mutableStateOf(false) }
             val scope = rememberCoroutineScope()
+            val theme = defaultTheme().copy(
+                colors = ColorVariant.Defaults.dark.copy(
+                    background = Color.Black,
+                    surface = ColorVariant.Defaults.dark.surface.darken(.08f),
+                    surfaceInteraction = ColorVariant.Defaults.dark.surfaceInteraction.darken(.05f),
+                )
+            )
+            val layoutValid = remember { mutableStateOf(false) }
+            val timerJob = remember { mutableStateOf<kotlinx.coroutines.Job?>(null) }
 
             window.attributes = window.attributes.apply {
-                screenBrightness = if (overrideBacklight.value && isDimmed(screenConfig)) BRIGHTNESS_OVERRIDE_NONE
-                    else when (screenConfig) {
+                screenBrightness = if (overrideBacklight.value && isDimmed(backlightConfig)) BRIGHTNESS_OVERRIDE_NONE
+                    else when (backlightConfig) {
                         null, BacklightConfig.Auto -> BRIGHTNESS_OVERRIDE_NONE
-                        is BacklightConfig.Fixed -> screenConfig.brightness.toDecimal().toFloat()
+                        is BacklightConfig.Fixed -> backlightConfig.brightness.toDecimal().toFloat()
                         is BacklightConfig.Off -> BRIGHTNESS_OVERRIDE_OFF
                     }
             }
 
             DisplayApplication.module.run {
-                Box(
-                    modifier = Modifier.fillMaxSize().pointerInput(screenConfig) {
-                        detectTapGestures {
-                            val tapToWake = when (screenConfig) {
-                                null, BacklightConfig.Auto -> false
-                                is BacklightConfig.Fixed -> screenConfig.tapToWake
-                                is BacklightConfig.Off -> screenConfig.tapToWake
+                val server = remember {
+                    remoteRenderModule.createServer(
+                        presenter = serverUiPresenter.onUpdate {
+                            timerJob.value?.cancel()
+                            layoutValid.value = true
+
+                            val expiration = (state.value as? ScreenState.Configured)?.config?.expiration
+                            if (expiration != null) {
+                                timerJob.value = scope.launch {
+                                    delay(expiration)
+                                    layoutValid.value = false
+                                }
                             }
-                            if (tapToWake && isDimmed(screenConfig)) {
+                        },
+                        port = DISPLAY_SERVER_PORT,
+                    )
+                }
+                LaunchedEffect("DisplayServer") {
+                    withContext(Dispatchers.IO) {
+                        server.bind()
+                    }
+                }
+                Box(
+                    modifier = Modifier.fillMaxSize().pointerInput(backlightConfig) {
+                        detectTapGestures {
+                            val tapToWake = when (backlightConfig) {
+                                null, BacklightConfig.Auto -> false
+                                is BacklightConfig.Fixed -> backlightConfig.tapToWake
+                                is BacklightConfig.Off -> backlightConfig.tapToWake
+                            }
+                            if (tapToWake && isDimmed(backlightConfig)) {
                                 overrideBacklight.value = true
                                 scope.launch {
                                     delay(10.seconds)
@@ -82,16 +118,11 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    ComposeRenderer(
-                        theme = defaultTheme().copy(
-                            colors = ColorVariant.Defaults.dark.copy(
-                                background = Color.Black,
-                                surface = ColorVariant.Defaults.dark.surface.darken(.08f),
-                                surfaceInteraction = ColorVariant.Defaults.dark.surfaceInteraction.darken(.05f),
-                            )
-                        ),
-                        renderers = renderers,
-                    ).render(layoutFactory.forState(state.value, overrideBacklight.value))
+                    if (layoutValid.value) {
+                        serverUiPresenter.bind(theme)
+                    } else {
+                        localUiPresenter.bindAndPresent(theme, layoutFactory.forState(state.value))
+                    }
                 }
             }
         }

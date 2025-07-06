@@ -24,14 +24,14 @@ internal class KtorGlassHttpClient: GlassHttpClient {
         }
     }
 
-    override suspend fun updateDisplay(
+    override suspend fun setConfig(
         config: DisplayConfig,
         host: String,
         port: Int,
     ) {
         val response = httpClient.put {
             url.host = host
-            url.path("update")
+            url.path("config")
             url.protocol = URLProtocol.HTTP
             url.port = port
             contentType(ContentType.Application.Json)
