@@ -4,8 +4,10 @@ import com.inkapplications.glassconsole.ApplicationModule.Config.CONFIG_SERVER_P
 import com.inkapplications.glassconsole.client.GlassClientModule
 import com.inkapplications.glassconsole.renderer.HashingPinPadRenderer
 import com.inkapplications.glassconsole.renderer.PinPadRenderer
+import com.inkapplications.glassconsole.renderer.WeatherRenderer
 import com.inkapplications.glassconsole.server.ConfigServer
 import com.inkapplications.glassconsole.server.IpProvider
+import com.inkapplications.glassconsole.structures.elements.WeatherElement
 import com.inkapplications.glassconsole.structures.pin.EnterHashedPinEvent
 import com.inkapplications.glassconsole.structures.pin.HashingPinPadElement
 import com.inkapplications.glassconsole.structures.pin.HashingPinPadElementSerializer
@@ -51,7 +53,7 @@ class ApplicationModule(
         pinValidator = pinValidator,
         pskAccess = pskAccess,
     )
-    val renderers = listOf(PinPadRenderer, hashingPinPadRenderer)
+    val renderers = listOf(PinPadRenderer, hashingPinPadRenderer, WeatherRenderer)
 
     private val broadcaster = Broadcaster(configServer, application, logger)
     private val daemonInitializer = DaemonInitializer(
@@ -70,13 +72,14 @@ class ApplicationModule(
         serializationConfig = {
             addElementSerializer(HashingPinPadElement::class, HashingPinPadElementSerializer(uiEvents))
             addEventSerializer(EnterHashedPinEvent::class, EnterHashedPinEvent.serializer(), EnterHashedPinEvent.Listeners.PinListener)
+            addElementSerializer(WeatherElement::class, WeatherElement.serializer())
         }
     )
     val serverUiPresenter = ComposePresenter(
-        renderers = DisplayApplication.module.renderers,
+        renderers = renderers,
     )
     val localUiPresenter = ComposePresenter(
-        renderers = DisplayApplication.module.renderers,
+        renderers = renderers,
     )
 
     val layoutFactory = UiLayoutFactory()

@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(compose.components.resources)
 
     implementation(projects.structures)
     implementation(projects.client)
