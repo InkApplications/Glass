@@ -88,7 +88,7 @@ jobs:
                     prerelease: true
             -
                 name: Download Artifacts
-                uses: actions/download-artifact@v4
+                uses: actions/download-artifact@v5
             -
                 name: Upload AAB Release Asset
                 uses: actions/upload-release-asset@v1.0.2
