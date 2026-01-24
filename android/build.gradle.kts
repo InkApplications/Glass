@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
     kotlin("plugin.serialization")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -8,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.inkapplications.glassconsole"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.inkapplications.glassconsole"
-        minSdk = 21
-        targetSdk = 35
+        minSdk = 26
+        targetSdk = 36
         versionCode = project.properties.getOrDefault("versionCode", "1").toString().toInt()
         versionName = project.properties.getOrDefault("versionName", "SNAPSHOT").toString()
         buildConfigField("String", "COMMIT", project.properties.getOrDefault("commit", null)?.let { "\"$it\"" } ?: "null")
@@ -53,12 +52,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
     packaging {
         resources {

@@ -4,9 +4,9 @@ import com.inkapplications.glassconsole.client.pin.*
 import com.inkapplications.glassconsole.client.pin.Sha256PinValidator
 import com.inkapplications.glassconsole.client.remote.GlassHttpClient
 import com.inkapplications.glassconsole.client.remote.KtorGlassHttpClient
-import kotlinx.datetime.Clock
 import regolith.data.settings.SettingsAccess
 import regolith.init.Initializer
+import kotlin.time.Clock
 
 /**
  * Module to provide access to create client components.
@@ -32,7 +32,7 @@ object GlassClientModule {
      * @param clock The Clock to use for timestamps on challenge responses.
      */
     fun createPinValidator(
-        clock: Clock = Clock.System
+        clock: Clock = Clock.System,
     ): PinValidator {
         return Sha256PinValidator(clock)
     }
