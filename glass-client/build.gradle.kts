@@ -15,7 +15,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.structures)
+            api(projects.glassStructures)
             implementation(libs.iospin.libsodium)
             implementation(libs.bundles.ktor.client)
             implementation(libs.ktor.client.cio)

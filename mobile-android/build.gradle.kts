@@ -72,8 +72,8 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(compose.components.resources)
 
-    implementation(projects.structures)
-    implementation(projects.client)
+    implementation(projects.glassStructures)
+    implementation(projects.glassClient)
     implementation(libs.bundles.regolith)
     implementation(libs.ink.ui.render.compose)
     implementation(libs.ink.ui.render.remote)
