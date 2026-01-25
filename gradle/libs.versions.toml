@@ -8,6 +8,35 @@ compose-bom = "2026.01.00"
 regolith = "1.6.0"
 ink-ui = "1.5.2"
 
+[plugins.android-gradle]
+version = "8.12.0"
+#version = "8.13.2"
+id = "com.android.application"
+
+[plugins.kotlin-android]
+version.ref = "kotlin"
+id = "org.jetbrains.kotlin.android"
+
+[plugins.kotlin-serialization]
+version.ref = "kotlin"
+id = "org.jetbrains.kotlin.plugin.serialization"
+
+[plugins.compose-compiler]
+version.ref = "kotlin"
+id = "org.jetbrains.kotlin.plugin.compose"
+
+[plugins.compose-multiplatform]
+version = "1.10.0"
+id = "org.jetbrains.compose"
+
+[plugins.kotlin-multiplatform]
+version.ref = "kotlin"
+id = "org.jetbrains.kotlin.multiplatform"
+
+[plugins.ink-publications]
+version = "SNAPSHOT"
+id = "com.inkapplications.gradle.publications"
+
 [libraries.android-gradle]
 version = "8.12.0"
 module = "com.android.tools.build:gradle"
@@ -24,9 +53,13 @@ module = "org.jetbrains.kotlin:kotlin-serialization"
 version = "0.18.1"
 module = "org.jetbrains.kotlinx:binary-compatibility-validator"
 
-[libraries.dokka]
+[libraries.dokka-gradle]
 version = "2.1.0"
-module = "org.jetbrains.dokka:dokka-gradle-plugin"
+module = "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin"
+
+[libraries.dokka-javadoc]
+version = "2.1.0"
+module = "org.jetbrains.dokka-javadoc:org.jetbrains.dokka-javadoc.gradle.plugin"
 
 [libraries.compose-gradle]
 version = "1.10.0"
@@ -155,6 +188,14 @@ module = "com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings"
 [libraries.android-desugaring]
 version = "2.1.5"
 module = "com.android.tools:desugar_jdk_libs"
+
+[libraries.glass-structures]
+version = "2.0-SNAPSHOT"
+module = "com.inkapplications.glassconsole:glass-structures"
+
+[libraries.glass-client]
+version = "2.0-SNAPSHOT"
+module = "com.inkapplications.glassconsole:glass-client"
 
 [bundles]
 androidx = ["androidx-appcompat", "core-ktx", "lifecycle-runtime-ktx", "activity-compose"]

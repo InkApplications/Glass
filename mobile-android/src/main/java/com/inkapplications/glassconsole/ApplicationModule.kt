@@ -17,11 +17,11 @@ import kimchi.Kimchi
 import kimchi.logger.LogLevel
 import kimchi.logger.defaultWriter
 import kimchi.logger.withThreshold
-import kotlinx.datetime.Clock
 import regolith.data.settings.AndroidSettingsModule
 import regolith.init.InitRunner
 import regolith.init.RegolithInitRunner
 import regolith.processes.daemon.DaemonInitializer
+import kotlin.time.Clock
 
 /**
  * Object graph used application-wide.

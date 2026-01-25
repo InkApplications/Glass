@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.android.application")
-    kotlin("plugin.serialization")
-    id("org.jetbrains.compose")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.gradle)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -45,12 +48,18 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
+    }
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
     }
     buildFeatures {
         compose = true
@@ -65,6 +74,11 @@ android {
     }
 }
 
+repositories {
+    google()
+    mavenCentral()
+}
+
 dependencies {
     coreLibraryDesugaring(libs.android.desugaring)
     implementation(libs.bundles.androidx)
@@ -72,8 +86,8 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(compose.components.resources)
 
-    implementation(projects.glassStructures)
-    implementation(projects.glassClient)
+    implementation(libs.glass.structures)
+    implementation(libs.glass.client)
     implementation(libs.bundles.regolith)
     implementation(libs.ink.ui.render.compose)
     implementation(libs.ink.ui.render.remote)
@@ -83,4 +97,10 @@ dependencies {
     implementation(libs.ktor.server.cio)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.kimchi.core)
+}
+
+tasks.configureEach {
+    if (name.startsWith("lint", ignoreCase = true)) {
+        enabled = false
+    }
 }

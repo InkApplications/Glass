@@ -1,19 +1,7 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
-gradle.startParameter.excludedTaskNames.add("lint")
-
-repositories {
-    mavenCentral()
-    google()
+tasks.register("clean") {
+    dependsOn(gradle.includedBuilds.map { it.task(":clean") })
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        mavenLocal()
-    }
-    tasks.withType(Test::class) {
-        testLogging.exceptionFormat = TestExceptionFormat.FULL
-    }
+tasks.register("check") {
+    dependsOn(gradle.includedBuilds.map { it.task(":check") })
 }

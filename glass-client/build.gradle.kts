@@ -1,13 +1,15 @@
 plugins {
-    kotlin("multiplatform")
-    id("published")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.ink.publications)
+}
+
+repositories {
+    mavenCentral()
 }
 
 kotlin {
     applyDefaultHierarchyTemplate()
-    jvmToolchain(11)
     jvm()
-
     macosX64()
     macosArm64()
     iosSimulatorArm64()
@@ -15,7 +17,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.glassStructures)
+            api(libs.glass.structures)
             implementation(libs.iospin.libsodium)
             implementation(libs.bundles.ktor.client)
             implementation(libs.ktor.client.cio)

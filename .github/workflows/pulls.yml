@@ -1,4 +1,0 @@
-on: [pull_request]
-jobs:
-  tests:
-    uses: inkapplications/.github/.github/workflows/kmp-checks.yml@2794fc60080c36a29a3c039e96c142c920d3c746

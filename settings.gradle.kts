@@ -1,21 +1,6 @@
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        google()
-    }
-}
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
 rootProject.name = "glass-console"
 
-include(":mobile-android")
-include(":glass-client")
-include(":glass-structures")
+includeBuild("mobile-android")
+includeBuild("glass-client")
+includeBuild("glass-structures")
+includeBuild("gradle-plugins")

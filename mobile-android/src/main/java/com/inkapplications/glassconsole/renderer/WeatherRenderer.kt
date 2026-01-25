@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import ink.ui.render.compose.renderer.ElementRenderer
 import ink.ui.render.compose.renderer.resource
 import ink.ui.render.compose.theme.ColorVariant
